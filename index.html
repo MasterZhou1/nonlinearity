@@ -3,12 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>nonlinearity.net — test</title>
+<title>Nonlinearity — research that runs itself</title>
+<meta name="description" content="Nonlinearity builds agents that propose, run and triage experiments, turning the research loop into infrastructure.">
+<style>
+:root{--bg:#07080b;--fg:#e9ecf3;--dim:#8d95a8;--line:#161b26;--card:#0c0e14;--a1:#7aa2ff;--a2:#c9a2ff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.glow{position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:120vw;height:90vh;pointer-events:none;z-index:0;background:radial-gradient(50% 50% at 50% 50%,rgba(122,162,255,.16),rgba(201,162,255,.06) 45%,transparent 70%)}
+.curve{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+header,main,footer{position:relative;z-index:1}
+header{display:flex;align-items:center;justify-content:space-between;gap:1rem;max-width:1080px;margin:0 auto;padding:1.5rem 24px}
+.mark{font-size:.78rem;letter-spacing:.24em;font-weight:700;text-decoration:none;color:var(--fg)}
+nav{display:flex;gap:1.5rem;align-items:center;font-size:.9rem}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+nav a.cta{color:var(--fg);border:1px solid var(--line);padding:.45rem .9rem;border-radius:999px}
+main{max-width:1080px;margin:0 auto;padding:0 24px}
+.hero{padding:13vh 0 9vh;max-width:820px}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--a1);border:1px solid #1d2740;background:#0b1020;padding:.4rem .8rem;border-radius:999px;margin:0 0 1.8rem}
+h1{font-size:clamp(2.6rem,7.5vw,4.4rem);line-height:1.03;letter-spacing:-.04em;font-weight:650;margin:0 0 1.4rem}
+h1 span{background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:1.18rem;color:var(--dim);margin:0 0 2.4rem;max-width:36em}
+.btns{display:flex;flex-wrap:wrap;gap:.8rem}
+.btns a{text-decoration:none;font-size:.95rem;padding:.8rem 1.4rem;border-radius:10px;font-weight:550}
+.primary{background:linear-gradient(100deg,var(--a1),var(--a2));color:#0a0c12}
+.ghost{border:1px solid var(--line);color:var(--fg)}
+.ghost:hover{border-color:#2b3550}
+section+section{padding-top:7vh}
+h2{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);font-weight:600;margin:0 0 1.6rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.card{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:1.5rem}
+.card .n{font-size:.72rem;color:var(--a1);letter-spacing:.14em;margin:0 0 .9rem}
+.card b{display:block;font-size:1.05rem;margin:0 0 .5rem;font-weight:600}
+.card p{margin:0;color:var(--dim);font-size:.95rem}
+.prose{max-width:38em;color:var(--dim);font-size:1.02rem}
+.prose strong{color:var(--fg);font-weight:600}
+.row{display:flex;gap:1.4rem;align-items:baseline;padding:1.1rem 0;border-top:1px solid var(--line)}
+.row .meta{min-width:12rem;color:var(--dim);font-size:.82rem;letter-spacing:.04em}
+.row a{color:var(--fg);text-decoration:none;border-bottom:1px solid #2b3346}
+.row a:hover{color:var(--a1);border-color:var(--a1)}
+.endcta{margin:9vh 0 0;border:1px solid var(--line);border-radius:18px;background:var(--card);padding:2.6rem}
+.endcta h3{margin:0 0 .6rem;font-size:1.5rem;letter-spacing:-.02em;font-weight:600}
+.endcta p{margin:0 0 1.4rem;color:var(--dim);max-width:34em}
+.endcta a{color:#0a0c12;background:linear-gradient(100deg,var(--a1),var(--a2));text-decoration:none;padding:.75rem 1.3rem;border-radius:10px;font-size:.95rem;font-weight:550}
+footer{max-width:1080px;margin:0 auto;padding:5vh 24px 4vh;color:#5b6479;font-size:.82rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+footer a{color:#5b6479}
+@media(max-width:820px){.grid{grid-template-columns:1fr}.row{flex-direction:column;gap:.3rem}.row .meta{min-width:0}nav a:not(.cta){display:none}.endcta{padding:1.8rem}}
+</style>
 </head>
-<body style="background:#0b0e14;color:#e6e9ef;font:16px/1.6 system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0">
-  <main style="text-align:center">
-    <h1 style="margin:0 0 .5rem;font-size:2rem">It works.</h1>
-    <p style="margin:0;color:#8b93a7">nonlinearity.net — test page</p>
-  </main>
+<body>
+<div class="glow"></div>
+<svg class="curve" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+ <defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
+  <stop offset="0" stop-color="#7aa2ff" stop-opacity="0"/>
+  <stop offset=".6" stop-color="#7aa2ff" stop-opacity=".35"/>
+  <stop offset="1" stop-color="#c9a2ff" stop-opacity=".75"/></linearGradient></defs>
+ <path d="M-60 790 C 430 786 660 705 800 460 C 900 290 980 100 1280 -60" fill="none" stroke="url(#g)" stroke-width="1.5"/>
+ <path d="M-60 800 C 500 798 750 745 900 515 C 1010 355 1080 175 1320 10" fill="none" stroke="url(#g)" stroke-width="1" opacity=".4"/>
+</svg>
+
+<header>
+ <a class="mark" href="/">NONLINEARITY</a>
+ <nav>
+  <a href="#loop">The loop</a>
+  <a href="#why">Why now</a>
+  <a href="#about">About</a>
+  <a class="cta" href="mailto:hi@nonlinearity.net">Contact</a>
+ </nav>
+</header>
+
+<main>
+ <section class="hero">
+  <p class="badge">Early access · in development</p>
+  <h1>Research that <span>runs itself</span>.</h1>
+  <p class="lede">We build agents that generate hypotheses, run the experiments, and throw out what does not hold — so progress stops being bounded by how many ideas one person can test in a week.</p>
+  <div class="btns">
+   <a class="primary" href="mailto:hi@nonlinearity.net">Request early access</a>
+   <a class="ghost" href="#loop">How it works</a>
+  </div>
+ </section>
+
+ <section id="loop">
+  <h2>The loop</h2>
+  <div class="grid">
+   <div class="card"><p class="n">01 / PROPOSE</p><b>Hypotheses with a prior</b>
+    <p>Candidate experiments are drafted from what previous runs actually showed, not from a fresh prompt each time.</p></div>
+   <div class="card"><p class="n">02 / RUN</p><b>Experiments as infrastructure</b>
+    <p>Jobs are dispatched, checkpointed and monitored on your own compute, with every config and seed recorded.</p></div>
+   <div class="card"><p class="n">03 / TRIAGE</p><b>Kill branches early</b>
+    <p>Results are scored against the hypothesis, negative results are kept, and dead directions are pruned automatically.</p></div>
+  </div>
+ </section>
+
+ <section id="why">
+  <h2>Why now</h2>
+  <p class="prose">The cost of running one more experiment keeps falling, while the number of plausible experiments keeps growing. The bottleneck has moved: <strong>the hard part is no longer running a study, it is choosing which study is worth running and knowing when to stop.</strong> That selection step is mechanical enough to automate, and consequential enough to be worth automating well.</p>
+ </section>
+
+ <section id="about">
+  <h2>About</h2>
+  <p class="prose">Nonlinearity is an early-stage AI company. We work on systems that run the experimental loop end to end — proposing, executing and evaluating their own experiments — and on the infrastructure that makes those loops cheap enough to leave running. We are prototyping, not selling yet.</p>
+ </section>
+
+ <section class="endcta">
+  <h3>Working on the same problem?</h3>
+  <p>We are talking to researchers and teams who run a lot of experiments and want the loop to keep moving while they sleep.</p>
+  <a href="mailto:hi@nonlinearity.net">Get in touch</a>
+ </section>
+</main>
+
+<footer>
+ <span>© 2026 Nonlinearity</span>
+ <span><a href="mailto:hi@nonlinearity.net">hi@nonlinearity.net</a></span>
+</footer>
 </body>
 </html>
