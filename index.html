@@ -136,7 +136,7 @@ canvas{height:210px}
     canvas{height:292px}
     .viz{box-shadow:0 1px 0 rgba(21,23,28,.03),0 24px 48px -40px rgba(30,28,80,.35)}
     @media (max-width:820px){h1{max-width:none}.hero{padding:9vh 0 6vh}
-      .subhead{margin-top:-.6rem}canvas{height:250px}}
+      .subhead{margin-top:-.6rem}canvas{height:250px}.three h3{min-height:auto}}
     .prose + .prose{margin-top:1.15rem}
     .eqbox sup{font-size:.72em}
     .ctrl>label:first-child{min-width:12em;cursor:pointer}
@@ -160,7 +160,23 @@ canvas{height:210px}
     .facts dd a{color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(21,23,28,.22)}
     .facts dd a:hover{color:var(--accent);border-bottom-color:var(--accent)}
     @media(max-width:900px){.aboutgrid{grid-template-columns:1fr;gap:2.2rem}.aboutgrid .prose{max-width:36em}}
-  </style>
+  
+/* ---------- hero: the grid stops being straight ---------- */
+.hero{position:relative}
+.bend{position:absolute;z-index:-1;pointer-events:none;top:-5vh;left:46%;width:54vw;height:114%;
+-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 32%,#000 78%,transparent 100%);
+mask-image:linear-gradient(90deg,transparent 0,#000 32%,#000 78%,transparent 100%)}
+.bend svg{display:block;width:100%;height:100%}
+.bend path{fill:none;stroke:rgba(91,75,232,.34);stroke-width:1;vector-effect:non-scaling-stroke}
+.bend path.lead{stroke:rgba(91,75,232,.6);stroke-width:1.5}
+@keyframes sweep{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+.hero>.bend{animation:sweep 1.5s cubic-bezier(.3,.72,.2,1) .28s both}
+@media(max-width:900px){.bend{left:-28px;right:-28px;width:auto;top:auto;bottom:0;height:14vh;
+-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%);
+mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%)}
+.bend path:nth-child(2n-1){display:none}}
+@media(prefers-reduced-motion:reduce){.hero>.bend{animation:none;clip-path:none}}
+</style>
 </head>
 <body>
 <header><div class="wrap hdr">
@@ -176,6 +192,16 @@ canvas{height:210px}
 <main class="wrap">
 
 <section class="hero">
+<div class="bend" aria-hidden="true"><svg viewBox="0 0 620 700" preserveAspectRatio="none">
+<path d="M0,130 C186,130 422,99 620,26"/>
+<path d="M0,202 C186,202 422,167 620,85"/>
+<path d="M0,274 C186,274 422,235 620,144"/>
+<path d="M0,346 C186,346 422,303 620,203"/>
+<path d="M0,418 C186,418 422,371 620,262"/>
+<path d="M0,490 C186,490 422,439 620,321"/>
+<path d="M0,562 C186,562 422,507 620,380"/>
+<path class="lead" d="M0,634 C186,634 422,576 620,439"/>
+</svg></div>
 <h1>Anything that can improve itself stops being <em>linear</em>.</h1>
 <p class="lede">Recursive self-improvement is not only a story about AI agents improving AI agents. Anything that lives in computer and language space &mdash; code, proofs, experiments, entire fields of science &mdash; can now read its own output and act on it. That feedback is what bends a straight line into a curve.</p>
 <div class="btns">
