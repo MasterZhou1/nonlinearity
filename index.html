@@ -364,7 +364,8 @@ canvas{height:210px}
       if(m.g>0) return 'the drag only buys time: y escapes at t* = '+m.tInf.toFixed(2);
       return 'y leaves the real line at t* = '+m.tInf.toFixed(2);
     }
-    return 'no feedback, no drag: y grows exactly like t';
+    if(m.b===0&&m.g===0) return 'no feedback, no drag: y grows exactly like t';
+    return 'the two terms nearly cancel: y crawls, but nothing caps it';
   }
 
   function paint(){
