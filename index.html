@@ -246,24 +246,24 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <p class="subhead">Read <var>y</var> as everything one system has produced so far &mdash; theorems proved, experiments closed, code that runs &mdash; and <var>t</var> as how long it has been running. The only question is what its rate of production depends on. Three answers, three terms.</p>
 <div class="eqn">
 <div class="eqrow">
-<p class="eqline">&#7823; <span class="op">=</span> a <span class="op">+</span> <span class="hi">&beta;y<sup>2</sup></span> <span class="op">&minus;</span> &gamma;y<sup>1.5</sup></p>
+<p class="eqline">&#7823; <span class="op">=</span> a <span class="op">+</span> <span class="hi">by<sup>2</sup></span> <span class="op">&minus;</span> cy<sup>1.5</sup></p>
 <p class="eqcond"><b>fixed</b> a = 1 &nbsp;&middot;&nbsp; y(0) = 0</p>
 </div>
 <dl class="terms">
 <div><dt>a</dt><dd>baseline output</dd></div>
-<div><dt class="hi">&beta;y<sup>2</sup></dt><dd>self-influence</dd></div>
-<div><dt>&gamma;y<sup>1.5</sup></dt><dd>verification drag</dd></div>
+<div><dt class="hi">by<sup>2</sup></dt><dd>self-influence</dd></div>
+<div><dt>cy<sup>1.5</sup></dt><dd>verification drag</dd></div>
 </dl>
 </div>
 <div class="split">
 <div>
-<p class="prose">With <var>&beta;</var> at zero only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>&beta;</var> up and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
-<p class="prose">Nothing actually blows up, at least not always. Real loops carry a third term, the <var>&gamma;</var> one: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
+<p class="prose">With <var>b</var> at zero, only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>b</var> up and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
+<p class="prose">Nothing actually blows up, at least not always. Real loops also carry <var>c</var>: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
 <p class="prose">None of this is a forecast. It is the smallest equation that still contains the argument: whether the feedback term is switched on at all, and whether the drag term can be kept ahead of it.</p>
 </div>
 <div class="viz">
-<div class="vizbar"><span><b>trajectory</b> &nbsp;&middot;&nbsp; y(t)</span><span id="bar">&beta; = 0.000</span></div>
-<canvas id="plot" role="img" aria-describedby="stat" aria-label="Trajectory of y against time for the current values of beta and gamma"></canvas>
+<div class="vizbar"><span><b>trajectory</b> &nbsp;&middot;&nbsp; y(t)</span><span id="bar">b = 0.000</span></div>
+<canvas id="plot" role="img" aria-describedby="stat" aria-label="Trajectory of y against time for the current values of b and c"></canvas>
 <div class="legendbar">
 <span><i class="dash"></i>no feedback</span>
 <span><i></i>with feedback</span>
@@ -271,14 +271,14 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 </div>
 <div class="vizctrl">
 <div class="ctrl">
-<label for="beta">self-influence &beta;</label>
-<input id="beta" type="range" min="0" max="0.5" step="0.005" value="0">
-<b id="betaOut">0.000</b>
+<label for="coefB">self-influence b</label>
+<input id="coefB" type="range" min="0" max="0.5" step="0.005" value="0">
+<b id="bVal">0.000</b>
 </div>
 <div class="ctrl">
-<label for="gamma">verification drag &gamma;</label>
-<input id="gamma" type="range" min="0" max="1.5" step="0.01" value="0">
-<b id="gammaOut">0.00</b>
+<label for="coefC">verification drag c</label>
+<input id="coefC" type="range" min="0" max="1.5" step="0.01" value="0">
+<b id="cVal">0.00</b>
 </div>
 </div>
 <p class="stat" id="stat"></p>
@@ -290,7 +290,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <div class="sechead">
 <div><p class="kick">scope / 02</p><h2>Where the term <em>switches on</em>.</h2></div>
 </div>
-<p class="subhead">A loop only closes if something can hand back a verdict. What that verdict costs is the <var>&gamma;</var> term, read across domains instead of across time. The difference between these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
+<p class="subhead">A loop only closes if something can hand back a verdict. What that verdict costs is the <var>c</var> term, read across domains instead of across time. The difference between these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
 <div class="three">
 <div><p class="kick">01 / science</p><h3>Experiments that design the next experiment</h3>
 <p>A result stops being an endpoint and becomes an input. The loop from question to evidence can close without waiting for a person to read the log &mdash; but never without waiting for the world, which sets the clock.</p>
@@ -339,8 +339,8 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
   var cv=document.getElementById('plot');
   if(!cv)return;
   var ctx=cv.getContext('2d');
-  var bi=document.getElementById('beta'),gi=document.getElementById('gamma');
-  var bo=document.getElementById('betaOut'),go=document.getElementById('gammaOut');
+  var bIn=document.getElementById('coefB'),cIn=document.getElementById('coefC');
+  var bVal=document.getElementById('bVal'),cVal=document.getElementById('cVal');
   var bar=document.getElementById('bar'),stat=document.getElementById('stat'),leg=document.getElementById('legLim');
   var ACC='#5b4be8',MUT='#6a6f7b',MONO='500 10px "IBM Plex Mono", ui-monospace, monospace';
   var YCAP=9,TMAX=24,DT=0.003;
@@ -475,9 +475,9 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
   }
 
   function paint(){
-    var b=parseFloat(bi.value),g=parseFloat(gi.value);
-    bo.textContent=b.toFixed(3); go.textContent=g.toFixed(2);
-    bar.textContent='\u03b2 = '+b.toFixed(3)+'  \u00b7  \u03b3 = '+g.toFixed(2);
+    var b=parseFloat(bIn.value),g=parseFloat(cIn.value);
+    bVal.textContent=b.toFixed(3); cVal.textContent=g.toFixed(2);
+    bar.textContent='b = '+b.toFixed(3)+'  \u00b7  c = '+g.toFixed(2);
     cur=model(b,g);
     stat.textContent=describe(cur);
     if(leg){
@@ -501,8 +501,8 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 
   function onInput(){ paint(); animate(); }
   function onChange(){ paint(); snap(); }
-  bi.addEventListener('input',onInput); gi.addEventListener('input',onInput);
-  bi.addEventListener('change',onChange); gi.addEventListener('change',onChange);
+  bIn.addEventListener('input',onInput); cIn.addEventListener('input',onInput);
+  bIn.addEventListener('change',onChange); cIn.addEventListener('change',onChange);
   window.addEventListener('resize',snap);
   if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(snap); }
   paint(); snap();
