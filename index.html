@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nonlinearity</title>
+<title>Nonlinearity — anything that can improve itself stops being linear</title>
 <meta name="description" content="Recursive self-improvement is not only a story about AI agents. Anything that lives in computer and language space can act on its own output, and that feedback bends the curve.">
 <meta name="theme-color" content="#f7f6f2">
 <meta property="og:title" content="Nonlinearity">
@@ -146,6 +146,19 @@ canvas{height:210px}
       .eqbox .sep{display:none}.eqbox .cond{display:block;margin-top:.35rem;color:var(--muted)}
       .legendbar{gap:.85rem;font-size:.68rem}}
     section[id]{scroll-margin-top:86px}
+    .aboutgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr);gap:3.4rem;align-items:start}
+    .aboutgrid .prose{max-width:none}
+    .facts{border-top:1px solid var(--line)}
+    .facts dl{margin:0}
+    .facts dl>div{display:flex;justify-content:space-between;align-items:baseline;gap:1.2rem;
+      padding:.78rem 0;border-bottom:1px solid var(--line)}
+    .facts dt{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--muted);white-space:nowrap}
+    .facts dd{margin:0;font-family:var(--mono);font-size:.79rem;color:var(--ink);text-align:right}
+    .facts dd a{color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(21,23,28,.22)}
+    .facts dd a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+    .facts dd sup{font-size:.68em;vertical-align:super;line-height:0}
+    @media(max-width:900px){.aboutgrid{grid-template-columns:1fr;gap:2.2rem}.aboutgrid .prose{max-width:36em}}
   </style>
 </head>
 <body>
@@ -207,7 +220,7 @@ canvas{height:210px}
 <div class="sechead">
 <div><p class="kick">scope / 02</p><h2>Where the term <em>switches on</em>.</h2></div>
 </div>
-<p class="subhead">Ordered by how cheap the verdict is.</p>
+<p class="subhead">Ordered from the most expensive verdict to the cheapest.</p>
 <div class="three">
 <div><p class="kick">01 / science</p><h3>Experiments that design the next experiment</h3>
 <p>A result stops being an endpoint and becomes an input. The loop from question to evidence can close without waiting for a person to read the log.</p></div>
@@ -222,8 +235,16 @@ canvas{height:210px}
 <div class="sechead">
 <div><p class="kick">about / 03</p><h2>What I am <em>building</em>.</h2></div>
 </div>
+<div class="aboutgrid">
 <p class="prose">Nonlinearity is an independent research effort on self-influencing systems. I build systems that run the loop end to end &mdash; proposing, executing and evaluating their own work &mdash; and the infrastructure that makes those loops cheap enough to leave running. <strong>The bet is that the self-influence term is already switching on, unevenly, across everything that can be represented as text.</strong> Most of the difficulty is not generation, it is evaluation — a loop is only worth leaving running where the verdict is cheap and honest. Prototyping, not selling.</p>
-<span class="chip">research &middot; prototyping</span>
+<aside class="facts">
+<dl>
+<div><dt>status</dt><dd>prototyping</dd></div>
+<div><dt>model</dt><dd><a href="#curve">y&#775; = a + &beta;y&sup2; &minus; &gamma;y<sup>1.5</sup></a></dd></div>
+<div><dt>contact</dt><dd><a href="mailto:hi@nonlinearity.net">hi@nonlinearity.net</a></dd></div>
+</dl>
+</aside>
+</div>
 </section>
 
 <section class="end">
