@@ -22,13 +22,13 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f7f6f2'/><path d='M3 28 C14 28 18 20 22 11 C24 6 26 4 29 3' stroke='%235b4be8' fill='none' stroke-width='3'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 :root{
 --paper:#f7f6f2; --card:#fffefb; --ink:#15171c; --muted:#6a6f7b;
 --line:rgba(21,23,28,.10); --accent:#5b4be8; --soft:#efedff;
 --serif:"Instrument Serif",ui-serif,"Iowan Old Style",Georgia,serif;
---mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+--mono:"IBM Plex Mono","Noto Sans Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -79,7 +79,7 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.2vw,2.5rem)
 .eqline .op{color:var(--muted)}
 .eqline .hi,.terms dt.hi{color:var(--accent)}
 .eqcond{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin:0;white-space:nowrap}
-.eqcond b{font-weight:400;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;opacity:.62;margin-right:.75rem}
+.eqcond b{font-weight:400;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;opacity:.62;margin-right:.28rem}
 .terms{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.9rem 0 0}
 .terms>div{border-top:1px solid var(--line);padding-top:.62rem}
 .terms dt{font-family:var(--mono);font-size:.95rem;color:var(--ink)}
@@ -246,8 +246,8 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <p class="subhead">Read <var>y</var> as everything one system has produced so far &mdash; theorems proved, experiments closed, code that runs &mdash; and <var>t</var> as how long it has been running. The only question is what its rate of production depends on. Three answers, three terms.</p>
 <div class="eqn">
 <div class="eqrow">
-<p class="eqline">y&#775; <span class="op">=</span> a <span class="op">+</span> <span class="hi">&beta;y<sup>2</sup></span> <span class="op">&minus;</span> &gamma;y<sup>1.5</sup></p>
-<p class="eqcond"><b>fixed</b>a = 1 &nbsp;&middot;&nbsp; y(0) = 0</p>
+<p class="eqline">&#7823; <span class="op">=</span> a <span class="op">+</span> <span class="hi">&beta;y<sup>2</sup></span> <span class="op">&minus;</span> &gamma;y<sup>1.5</sup></p>
+<p class="eqcond"><b>fixed</b> a = 1 &nbsp;&middot;&nbsp; y(0) = 0</p>
 </div>
 <dl class="terms">
 <div><dt>a</dt><dd>baseline output</dd></div>
@@ -290,7 +290,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <div class="sechead">
 <div><p class="kick">scope / 02</p><h2>Where the term <em>switches on</em>.</h2></div>
 </div>
-<p class="subhead">A loop only closes if something can hand back a verdict &mdash; that is the <var>&gamma;</var> term, read across domains instead of across time. What separates these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
+<p class="subhead">A loop only closes if something can hand back a verdict. What that verdict costs is the <var>&gamma;</var> term, read across domains instead of across time. The difference between these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
 <div class="three">
 <div><p class="kick">01 / science</p><h3>Experiments that design the next experiment</h3>
 <p>A result stops being an endpoint and becomes an input. The loop from question to evidence can close without waiting for a person to read the log &mdash; but never without waiting for the world, which sets the clock.</p>
@@ -299,7 +299,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <p>Models and agents that improve the thing producing them. Each pass changes not only the artifact but the capability that made it. The verdict is cheap to run here and easy to overfit, so it has to be designed as carefully as the loop it scores.</p>
 <div class="tmeta"><span>verdict from</span><b>a benchmark</b></div></div>
 <div><p class="kick">03 / language</p><h3>Anything checkable becomes improvable</h3>
-<p>Proofs, specs, schemas, plans. The limit is not what can be written down but what can be checked &mdash; and finding can stay expensive here while checking stays cheap, which is a gap a loop can live on. It stalls wherever taste is the only judge.</p>
+<p>Proofs, specs, schemas, plans. The limit is not what can be written down but what can be checked. Finding can stay expensive here while checking stays cheap, and a loop can live on that gap alone. It stalls wherever taste is the only judge.</p>
 <div class="tmeta"><span>verdict from</span><b>a checker</b></div></div>
 </div>
 </section>
