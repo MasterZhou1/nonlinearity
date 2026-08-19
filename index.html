@@ -115,7 +115,6 @@ border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .three>div:hover{background:#fff}
 .three h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;line-height:1.2;margin:.9rem 0 .55rem;letter-spacing:-.01em}
 .three p{margin:0 0 1.5rem;color:var(--muted);font-size:.95rem}
-.subhead b{font-family:var(--mono);font-weight:400;font-size:.86em;color:var(--ink)}
 .tmeta{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-top:auto;
 border-top:1px solid var(--line);padding-top:.72rem;font-family:var(--mono);font-size:.7rem}
 .tmeta span{letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
@@ -258,8 +257,8 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 </div>
 <div class="split">
 <div>
-<p class="prose">With both sliders at zero only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>&beta;</var> up on its own and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
-<p class="prose">Nothing has to blow up, though. Real loops carry a third term, the <var>&gamma;</var> one: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
+<p class="prose">With <var>&beta;</var> at zero only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>&beta;</var> up and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
+<p class="prose">Nothing actually blows up, at least not always. Real loops carry a third term, the <var>&gamma;</var> one: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
 <p class="prose">None of this is a forecast. It is the smallest equation that still contains the argument: whether the feedback term is switched on at all, and whether the drag term can be kept ahead of it.</p>
 </div>
 <div class="viz">
@@ -291,7 +290,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <div class="sechead">
 <div><p class="kick">scope / 02</p><h2>Where the term <em>switches on</em>.</h2></div>
 </div>
-<p class="subhead">A loop only closes if something can hand back a verdict &mdash; that is the <var>&gamma;</var> term, read across domains instead of across time. What separates these three is not how fast the work goes but what does the judging: from <b>01</b> to <b>03</b> the verdict gets cheaper to run, and narrower in what it can see.</p>
+<p class="subhead">A loop only closes if something can hand back a verdict &mdash; that is the <var>&gamma;</var> term, read across domains instead of across time. What separates these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
 <div class="three">
 <div><p class="kick">01 / science</p><h3>Experiments that design the next experiment</h3>
 <p>A result stops being an endpoint and becomes an input. The loop from question to evidence can close without waiting for a person to read the log &mdash; but never without waiting for the world, which sets the clock.</p>
@@ -300,7 +299,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <p>Models and agents that improve the thing producing them. Each pass changes not only the artifact but the capability that made it. The verdict is cheap to run here and easy to overfit, so it has to be designed as carefully as the loop it scores.</p>
 <div class="tmeta"><span>verdict from</span><b>a benchmark</b></div></div>
 <div><p class="kick">03 / language</p><h3>Anything checkable becomes improvable</h3>
-<p>Proofs, specs, schemas, plans. Finding can stay expensive here while checking stays cheap, and a loop can live on that gap alone. It stalls wherever taste is the only judge.</p>
+<p>Proofs, specs, schemas, plans. The limit is not what can be written down but what can be checked &mdash; and finding can stay expensive here while checking stays cheap, which is a gap a loop can live on. It stalls wherever taste is the only judge.</p>
 <div class="tmeta"><span>verdict from</span><b>a checker</b></div></div>
 </div>
 </section>
@@ -314,7 +313,7 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <aside class="facts">
 <dl>
 <div><dt>status</dt><dd>prototyping</dd></div>
-<div><dt>the hard part</dt><dd>evaluation</dd></div>
+<div><dt>the hard part</dt><dd>the verdict</dd></div>
 <div><dt>contact</dt><dd><a href="mailto:hi@nonlinearity.net">hi@nonlinearity.net</a></dd></div>
 </dl>
 </aside>
