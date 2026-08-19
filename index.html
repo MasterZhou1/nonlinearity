@@ -72,8 +72,27 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.2vw,2.5rem)
 .split{display:grid;grid-template-columns:1fr 1.1fr;gap:2.8rem;align-items:start}
 .prose{max-width:36em;color:#4a4f5a;font-size:1.04rem;margin:0}
 .prose strong{color:var(--ink);font-weight:600}
-.eqbox{display:inline-block;font-family:var(--mono);font-size:.86rem;background:var(--card);
-border:1px solid var(--line);border-radius:10px;padding:.6rem .85rem;margin:1.5rem 0 0}
+.eqn{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:1.9rem 0 1.7rem;margin:0 0 3.2rem}
+.eqrow{display:flex;align-items:baseline;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.eqline{font-family:var(--mono);font-size:clamp(1.5rem,3.4vw,2.5rem);line-height:1.15;letter-spacing:-.01em;color:var(--ink);margin:0}
+.eqline sup{font-size:.6em;letter-spacing:0}
+.eqline .op{color:var(--muted)}
+.eqline .hi,.terms dt.hi{color:var(--accent)}
+.eqcond{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin:0;white-space:nowrap}
+.eqcond b{font-weight:400;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;opacity:.62;margin-right:.75rem}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.9rem 0 0}
+.terms>div{border-top:1px solid var(--line);padding-top:.62rem}
+.terms dt{font-family:var(--mono);font-size:.95rem;color:var(--ink)}
+.terms dt sup{font-size:.66em}
+.terms dd{margin:.36rem 0 0;font-family:var(--mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.kicker{border-top:1px solid var(--line);margin:3.4rem 0 0;padding:1.7rem 0 0;font-family:var(--serif);font-size:clamp(1.2rem,2.3vw,1.62rem);line-height:1.32;letter-spacing:-.01em;color:var(--ink)}
+.kicker span{display:block;max-width:32em}
+.kicker em{font-style:italic;color:#2f2b63}
+.prose var,.subhead var{font-family:var(--mono);font-style:normal;font-size:.9em;color:var(--ink)}
+.vizctrl{border-top:1px solid var(--line);padding:1rem 1.05rem}
+.viz .ctrl{margin-top:0}
+.viz .ctrl+.ctrl{margin-top:.7rem}
+.viz .stat{border-top:1px solid var(--line);padding:.72rem 1.05rem;margin:0;min-height:0}
 .ctrl{display:flex;align-items:center;gap:.9rem;margin-top:1.5rem;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
 .ctrl input[type=range]{flex:1;min-width:110px;max-width:210px;accent-color:var(--accent)}
 .ctrl b{color:var(--ink);font-weight:500}
@@ -138,12 +157,17 @@ canvas{height:210px}
     @media (max-width:820px){h1{max-width:none}.hero{padding:9vh 0 6vh}
       .subhead{margin-top:-.6rem}canvas{height:250px}.three h3{min-height:auto}}
     .prose + .prose{margin-top:1.15rem}
-    .eqbox sup{font-size:.72em}
     .ctrl>label:first-child{min-width:12em;cursor:pointer}
     .ctrl b{min-width:3.2em;text-align:right}
     .ctrl+.ctrl{margin-top:.75rem}
     @media (max-width:820px){.ctrl{flex-wrap:wrap;gap:.6rem}.ctrl>label:first-child{min-width:0;flex:1 0 100%}
-      .eqbox .sep{display:none}.eqbox .cond{display:block;margin-top:.35rem;color:var(--muted)}
+      .eqn{padding:1.5rem 0 1.3rem;margin-bottom:2.4rem}
+      .eqrow{flex-direction:column;align-items:flex-start;gap:.85rem}
+      .eqcond{white-space:normal}
+      .terms{grid-template-columns:1fr;gap:0;margin-top:1.4rem}
+      .terms>div{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.72rem 0}
+      .terms dd{margin:0}
+      .kicker{margin-top:2.4rem;padding-top:1.3rem}
       .legendbar{gap:.85rem;font-size:.68rem}}
     section[id]{scroll-margin-top:86px}
     :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
@@ -215,11 +239,33 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <div><p class="kick">the curve / 01</p><h2>One system, one <em>extra term</em>.</h2></div>
 <p class="kick">interactive</p>
 </div>
+<p class="subhead">Read <var>y</var> as everything one system has produced so far &mdash; theorems proved, experiments closed, code that runs &mdash; and <var>t</var> as how long it has been running. The only question is what its rate of production depends on. Three answers, three terms.</p>
+<div class="eqn">
+<div class="eqrow">
+<p class="eqline">y&#775; <span class="op">=</span> a <span class="op">+</span> <span class="hi">&beta;y<sup>2</sup></span> <span class="op">&minus;</span> &gamma;y<sup>1.5</sup></p>
+<p class="eqcond"><b>fixed</b>a = 1 &nbsp;&middot;&nbsp; y(0) = 0</p>
+</div>
+<dl class="terms">
+<div><dt>a</dt><dd>baseline output</dd></div>
+<div><dt class="hi">&beta;y<sup>2</sup></dt><dd>self-influence</dd></div>
+<div><dt>&gamma;y<sup>1.5</sup></dt><dd>verification drag</dd></div>
+</dl>
+</div>
 <div class="split">
 <div>
-<p class="prose">With &beta; = 0 the quantity grows by a fixed amount per unit time: a straight line, forever. Switch on the &beta;y&sup2; term &mdash; the system feeding on what it has already produced &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
-      <p class="prose">Nothing actually blows up. Real loops carry a third term — evaluation costs something, verification lags behind generation, compute and data run out — so the singularity flattens into a ceiling. That is what makes the question quantitative instead of apocalyptic: how large is β, and how far out can the ceiling be pushed?</p>
-<div class="eqbox">y&#775; = a + &beta;y&sup2; &minus; &gamma;y<sup>1.5</sup><span class="sep">&nbsp;&middot;&nbsp;</span><span class="cond">a = 1, y(0) = 0</span></div>
+<p class="prose">With <var>&beta;</var> at zero only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>&beta;</var> up and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
+<p class="prose">Nothing actually blows up, at least not always. Real loops carry a third term, the <var>&gamma;</var> one: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
+<p class="prose">None of this is a forecast. It is the smallest equation that still contains the argument: whether the feedback term is switched on at all, and whether the drag term can be kept ahead of it.</p>
+</div>
+<div class="viz">
+<div class="vizbar"><span><b>trajectory</b> &nbsp;&middot;&nbsp; y(t)</span><span id="bar">&beta; = 0.000</span></div>
+<canvas id="plot" role="img" aria-describedby="stat" aria-label="Trajectory of y against time for the current values of beta and gamma"></canvas>
+<div class="legendbar">
+<span><i class="dash"></i>no feedback</span>
+<span><i></i>with feedback</span>
+<span id="legLim"><i class="dot"></i>singularity</span>
+</div>
+<div class="vizctrl">
 <div class="ctrl">
 <label for="beta">self-influence &beta;</label>
 <input id="beta" type="range" min="0" max="0.5" step="0.005" value="0">
@@ -230,18 +276,11 @@ mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100
 <input id="gamma" type="range" min="0" max="1.5" step="0.01" value="0">
 <b id="gammaOut">0.00</b>
 </div>
+</div>
 <p class="stat" id="stat"></p>
 </div>
-<div class="viz">
-<div class="vizbar"><span><b>trajectory</b> &nbsp;&middot;&nbsp; y(t)</span><span id="bar">&beta; = 0.000</span></div>
-<canvas id="plot" role="img" aria-describedby="stat" aria-label="Trajectory of y against time for the current values of beta and gamma"></canvas>
-<div class="legendbar">
-<span><i class="dash"></i>no feedback</span>
-<span><i></i>with feedback</span>
-<span id="legLim"><i class="dot"></i>singularity</span>
 </div>
-</div>
-</div>
+<p class="kicker"><span>So the question is quantitative, not apocalyptic: <em>how strong is the feedback, and how far out can the ceiling be pushed?</em></span></p>
 </section>
 <section id="scope">
 <div class="sechead">
