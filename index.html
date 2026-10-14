@@ -3,509 +3,732 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nonlinearity — anything that can improve itself stops being linear</title>
-<meta name="description" content="Recursive self-improvement is not only a story about AI agents. Anything in a computer, and now anything in language, can act on its own output, and that feedback bends the curve.">
-<meta name="theme-color" content="#f7f6f2">
+<title>Nonlinearity — anything that learns from its own best stops being linear</title>
+<meta name="description" content="Nonlinearity is an independent AI research lab. Trying more climbs a straight line; keep what works, learn from it and try again, and the line bends upward. We work on training, search and verification, and on the loop that joins them.">
+<meta name="theme-color" content="#f7f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="Nonlinearity">
-<meta property="og:description" content="Anything that can improve itself stops being linear.">
+<meta property="og:description" content="Anything that learns from its own best stops being linear.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nonlinearity.net/">
 <meta property="og:site_name" content="Nonlinearity">
 <meta property="og:image" content="https://nonlinearity.net/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Anything that can improve itself stops being linear.">
+<meta property="og:image:alt" content="Anything that learns from its own best stops being linear.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Nonlinearity">
-<meta name="twitter:description" content="Anything that can improve itself stops being linear.">
+<meta name="twitter:description" content="Anything that learns from its own best stops being linear.">
 <meta name="twitter:image" content="https://nonlinearity.net/og.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f7f6f2'/><path d='M3 28 C14 28 18 20 22 11 C24 6 26 4 29 3' stroke='%235b4be8' fill='none' stroke-width='3'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23f7f7f4'/><path d='M3 27 C13 27 17 22 21 13 C23 8 25 5 29 3' stroke='%231f4e79' fill='none' stroke-width='2.8' stroke-linecap='round'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400&display=swap">
+<script>try{var _t=localStorage.getItem("nl-theme");if(_t==="dark"||_t==="light")document.documentElement.setAttribute("data-theme",_t)}catch(e){}</script>
 <style>
+/* Layout: a research journal with plates you can touch. Paper, ink, one blue that means "the loop, the part that is kept".
+   Type scale: h1 80 / h2 44 / body 17 / label 12. Figures: names 22, labels 12, lines 1.5, emphasis 2.2. */
 :root{
---paper:#f7f6f2; --card:#fffefb; --ink:#15171c; --muted:#6a6f7b;
---line:rgba(21,23,28,.10); --accent:#5b4be8; --soft:#efedff;
---serif:"Instrument Serif",ui-serif,"Iowan Old Style",Georgia,serif;
---mono:"IBM Plex Mono","Noto Sans Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --bg:#f7f7f4; --bg-2:#fdfdfb; --bg-3:#f0f0eb;
+  --ink:#16181c; --soft:#474b52; --muted:#686c73;
+  --line:rgba(22,24,28,.10); --line-2:rgba(22,24,28,.22);
+  --accent:#1f4e79; --accent-wash:rgba(31,78,121,.07); --accent-fill:rgba(31,78,121,.13);
+  --header:rgba(247,247,244,.9);
+  --display:"Cormorant Garamond","Iowan Old Style",Georgia,serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
 }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1013; --bg-2:#15181c; --bg-3:#1a1d22;
+  --ink:#e9eaec; --soft:#aeb3ba; --muted:#868b93;
+  --line:rgba(233,234,236,.10); --line-2:rgba(233,234,236,.20);
+  --accent:#8fb4e3; --accent-wash:rgba(143,180,227,.07); --accent-fill:rgba(143,180,227,.22);
+  --header:rgba(14,16,19,.88); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e1013; --bg-2:#15181c; --bg-3:#1a1d22;
+  --ink:#e9eaec; --soft:#aeb3ba; --muted:#868b93;
+  --line:rgba(233,234,236,.10); --line-2:rgba(233,234,236,.20);
+  --accent:#8fb4e3; --accent-wash:rgba(143,180,227,.07); --accent-fill:rgba(143,180,227,.22);
+  --header:rgba(14,16,19,.88); color-scheme:dark;}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);
-font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
--webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-background-size:72px 72px;
--webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 28%,transparent 74%);
-mask-image:radial-gradient(120% 90% at 50% 0%,#000 28%,transparent 74%);opacity:.55}
-.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px}
-header{position:sticky;top:0;z-index:5;background:rgba(247,246,242,.84);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.hdr{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.85rem}
-.mark{font-family:var(--mono);font-size:.95rem;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:.45rem}
-.mark i{width:9px;height:9px;background:var(--accent);display:inline-block;border-radius:2px}
-nav{display:flex;align-items:center;gap:1.6rem}
-nav a{font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;color:var(--muted);text-decoration:none;transition:color .2s}
-nav a:hover{color:var(--ink)}
-nav a.btn{background:var(--ink);color:var(--paper);padding:.55rem .9rem;border-radius:8px;letter-spacing:.02em;transition:transform .2s,opacity .2s}
-nav a.btn:hover{opacity:.88;transform:translateY(-1px)}
-.kick{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
-.hero{padding:12vh 0 7vh;max-width:900px}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.9rem,6.6vw,4.9rem);line-height:1.02;
-letter-spacing:-.015em;margin:0 0 1.5rem}
+body{margin:0}
+.formula .f,.ineq,.col-sym,.defs dt,.sum,.plain i,.name{font-variant-numeric:lining-nums}
+html{background:var(--bg);scroll-padding-top:80px}
+body{background:var(--bg);color:var(--ink);font:1.0625rem/1.7 var(--sans);-webkit-font-smoothing:antialiased;padding-inline:var(--gut);overflow-x:clip}
+:root{--gut:clamp(20px,4.5vw,56px)}
+a{color:inherit}
+:focus-visible{outline:1.5px solid var(--accent);outline-offset:3px;border-radius:3px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(2.8rem,6vw,5rem);line-height:.98}
+h2{font-size:clamp(2rem,3.4vw,2.75rem);line-height:1.05}
 h1 em,h2 em{font-style:italic;color:var(--accent)}
-.lede{font-size:1.12rem;color:#4a4f5a;margin:0 0 2.2rem;max-width:33em}
-.btns{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
-.btns a{font-family:var(--mono);font-size:.82rem;text-decoration:none;padding:.72rem 1.1rem;border-radius:9px;transition:transform .2s,border-color .2s,opacity .2s}
-.b1{background:var(--ink);color:var(--paper)}
-.b1:hover{opacity:.88;transform:translateY(-1px)}
-.b2{border:1px solid var(--line);background:var(--card);color:var(--ink)}
-.b2:hover{border-color:rgba(21,23,28,.3);transform:translateY(-1px)}
-@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.hero>*{animation:rise .75s cubic-bezier(.2,.7,.2,1) both}
-.hero h1{animation-delay:.04s}.hero .lede{animation-delay:.13s}.hero .btns{animation-delay:.22s}
-section{padding:4.8vh 0}
-.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
-border-top:1px solid var(--line);padding-top:.9rem;margin-bottom:2.3rem}
-h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.2vw,2.5rem);line-height:1.1;letter-spacing:-.015em;margin:.55rem 0 0}
-.split{display:grid;grid-template-columns:1fr 1.1fr;gap:2.8rem;align-items:start}
-.prose{max-width:36em;color:#4a4f5a;font-size:1.04rem;margin:0}
-.prose strong{color:var(--ink);font-weight:600}
-.eqn{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:1.9rem 0 1.7rem;margin:0 0 2.6rem}
-.eqrow{display:flex;align-items:baseline;justify-content:space-between;gap:2rem;flex-wrap:wrap}
-.eqline{font-family:var(--mono);font-size:clamp(1.5rem,3.4vw,2.5rem);line-height:1.15;letter-spacing:-.01em;color:var(--ink);margin:0}
-.eqline sup{font-size:.6em;letter-spacing:0}
-.eqline .op{color:var(--muted)}
-.eqline .hi,.terms dt.hi{color:var(--accent)}
-.eqcond{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin:0;white-space:nowrap}
-.eqcond b{font-weight:400;font-size:.8em;letter-spacing:.14em;text-transform:uppercase;opacity:.62;margin-right:.28rem}
-.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.9rem 0 0}
-.terms>div{border-top:1px solid var(--line);padding-top:.62rem}
-.terms dt{font-family:var(--mono);font-size:.95rem;color:var(--ink)}
-.terms dt sup{font-size:.66em}
-.terms dd{margin:.36rem 0 0;font-family:var(--mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
-.kicker{border-top:1px solid var(--line);margin:2.8rem 0 0;padding:1.7rem 0 0;font-family:var(--serif);font-size:clamp(1.2rem,2.3vw,1.62rem);line-height:1.32;letter-spacing:-.01em;color:var(--ink)}
-.kicker span{display:block;max-width:32em}
-.kicker em{font-style:italic;color:#2f2b63}
-.prose var,.subhead var{font-family:var(--mono);font-style:normal;font-size:.9em;color:var(--ink)}
-.vizctrl{border-top:1px solid var(--line);padding:1rem 1.05rem}
-.viz .ctrl{margin-top:0}
-.viz .ctrl+.ctrl{margin-top:.7rem}
-.viz .stat{border-top:1px solid var(--line);padding:.72rem 1.05rem;margin:0;min-height:0}
-.ctrl{display:flex;align-items:center;gap:.9rem;margin-top:1.5rem;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
-.ctrl input[type=range]{flex:1;min-width:110px;max-width:210px;accent-color:var(--accent)}
-.ctrl b{color:var(--ink);font-weight:500}
-.stat{font-family:var(--mono);font-size:.74rem;color:var(--accent);margin:1rem 0 0;min-height:1.2em}
-.viz{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
-box-shadow:0 1px 0 rgba(21,23,28,.03),0 30px 60px -45px rgba(30,28,80,.42)}
-.vizbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 1.05rem;
-border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-.vizbar b{color:var(--ink);font-weight:500}
-canvas{display:block;width:100%;height:250px}
-.legendbar{display:flex;gap:1.2rem;padding:.7rem 1.05rem;border-top:1px solid var(--line);
-font-family:var(--mono);font-size:.72rem;color:var(--muted)}
-.legendbar span{display:inline-flex;align-items:center;gap:.45rem}
-.legendbar i{width:16px;height:0;display:inline-block;border-top:2px solid var(--accent)}
-.legendbar i.dash{border-top:2px dashed rgba(21,23,28,.35)}
-.legendbar i.dot{border-top:2px dotted rgba(91,75,232,.6)}
-.three{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
-border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.three>div{background:var(--card);padding:1.7rem 1.45rem;transition:background .25s;display:flex;flex-direction:column}
-.three>div:hover{background:#fff}
-.three h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;line-height:1.2;margin:.9rem 0 .55rem;letter-spacing:-.01em}
-.three p{margin:0 0 1.5rem;color:var(--muted);font-size:.95rem}
-.tmeta{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-top:auto;
-border-top:1px solid var(--line);padding-top:.72rem;font-family:var(--mono);font-size:.7rem}
-.tmeta span{letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
-.tmeta b{font-weight:400;font-size:.82rem;color:var(--accent)}
-.end{margin:6vh 0 0;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:2.6rem;
-display:grid;grid-template-columns:1fr auto;align-items:center;gap:2.8rem}
-.end h3{font-family:var(--serif);font-weight:400;font-size:2rem;letter-spacing:-.015em;margin:0 0 .6rem}
-.end p{color:var(--muted);margin:0;max-width:32em}
-.end a{font-family:var(--mono);font-size:.82rem;text-decoration:none;background:var(--ink);
-color:var(--paper);padding:.72rem 1.1rem;border-radius:9px;display:inline-block;transition:transform .2s,opacity .2s}
-.end a:hover{opacity:.88;transform:translateY(-1px)}
-@media(max-width:820px){.end{grid-template-columns:1fr;gap:1.6rem;align-items:start}.end a{justify-self:start}}
-footer{border-top:1px solid var(--line);margin-top:7vh}
-.ftr{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;padding-block:1.7rem;
-font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-.ftr a{color:var(--muted);text-decoration:none}
-.ftr a:hover{color:var(--ink)}
-@media(max-width:900px){.split{grid-template-columns:1fr;gap:1.9rem}}
-@media(max-width:820px){
-nav a:not(.btn){display:none}
-.three{grid-template-columns:1fr}
-canvas{height:210px}
-.hero{padding:8vh 0 5vh}
-.end{padding:1.7rem}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero>*{animation:none}}
+p{margin:0}
+.label{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.body{color:var(--soft);max-width:34em;text-wrap:pretty}
+.a-sum,.sum,.plain,.lead,.e-sum{text-wrap:pretty}
+.body+.body{margin-top:1rem}
+.body i{font-family:var(--display);font-size:1.15em;padding-right:.06em;line-height:0}
 
-    /* ---------- refinement pass ---------- */
-    body::before{position:absolute;inset:0 0 auto 0;height:94vh;opacity:.34;
-      mask-image:radial-gradient(115% 100% at 50% 0%,#000 22%,transparent 76%);
-      -webkit-mask-image:radial-gradient(115% 100% at 50% 0%,#000 22%,transparent 76%)}
-    .hero{padding:15vh 0 9vh;max-width:960px}
-    h1{font-size:clamp(2.6rem,5.4vw,4.3rem);line-height:.98;letter-spacing:-.022em;max-width:21ch}
-    .lede{font-size:1.06rem;line-height:1.7;max-width:30em;color:#5d6270}
-    nav a.btn{background:transparent;color:var(--ink);border:1px solid rgba(21,23,28,.22);box-shadow:none}
-    nav a.btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-    section{padding:clamp(4.5rem,9vh,7.5rem) 0}
-    .sechead{padding-top:1.1rem;margin-bottom:2.8rem}
-    h2 em{color:#2f2b63}
-    .subhead{font-size:1.06rem;line-height:1.7;color:#5d6270;max-width:34em;margin:-1.4rem 0 2.4rem}
-    .three h3{min-height:2.5em}
-    canvas{height:252px}
-    .viz{box-shadow:0 1px 0 rgba(21,23,28,.03),0 24px 48px -40px rgba(30,28,80,.35)}
-    @media (max-width:820px){h1{max-width:none}.hero{padding:9vh 0 6vh}
-      .subhead{margin-top:-.6rem}canvas{height:250px}.three h3{min-height:auto}}
-    .prose + .prose{margin-top:1.15rem}
-    .ctrl>label:first-child{min-width:12em;cursor:pointer}
-    .ctrl b{min-width:3.2em;text-align:right}
-    .ctrl+.ctrl{margin-top:.75rem}
-    @media (max-width:820px){.ctrl{flex-wrap:wrap;gap:.6rem}.ctrl>label:first-child{min-width:0;flex:1 0 100%}
-      .eqn{padding:1.5rem 0 1.3rem;margin-bottom:2.4rem}
-      .eqrow{flex-direction:column;align-items:flex-start;gap:.85rem}
-      .eqcond{white-space:normal}
-      .terms{grid-template-columns:1fr;gap:0;margin-top:1.4rem}
-      .terms>div{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.72rem 0}
-      .terms dd{margin:0}
-      .kicker{margin-top:2.4rem;padding-top:1.3rem}
-      .legendbar{gap:.85rem;font-size:.68rem}}
-    section[id]{scroll-margin-top:86px}
-    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
-    input[type=range]:focus-visible{outline-offset:5px}
-    .aboutgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr);gap:3.4rem;align-items:start}
-    .aboutgrid .prose{max-width:none}
-    .facts{border-top:1px solid var(--line)}
-    .facts dl{margin:0}
-    .facts dl>div{display:flex;justify-content:space-between;align-items:baseline;gap:1.2rem;
-      padding:.78rem 0;border-bottom:1px solid var(--line)}
-    .facts dt{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
-      color:var(--muted);white-space:nowrap}
-    .facts dd{margin:0;font-family:var(--mono);font-size:.79rem;color:var(--ink);text-align:right}
-    .facts dd a{color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(21,23,28,.22)}
-    .facts dd a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-    @media(max-width:900px){.aboutgrid{grid-template-columns:1fr;gap:2.2rem}.aboutgrid .prose{max-width:36em}}
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;margin-inline:calc(-1*var(--gut));padding-inline:var(--gut);background:var(--header);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.2rem;padding-block:.85rem}
+.mark{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;font-family:var(--display);font-size:1.35rem}
+.mark svg{width:20px;height:20px;flex:none;color:var(--accent)}
+.right{display:flex;align-items:center;gap:1.1rem;min-width:0}
+.tabs{display:flex;gap:1.4rem}
+.tabs button{all:unset;cursor:pointer;white-space:nowrap;font-family:var(--sans);font-size:.875rem;letter-spacing:0;color:var(--muted);padding:.35rem 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tabs button:focus-visible{outline:1.5px solid var(--accent);outline-offset:3px}
+.theme{all:unset;cursor:pointer;flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line-2)}
+.theme:hover{color:var(--ink);border-color:var(--ink)}
+.theme:focus-visible{outline:1.5px solid var(--accent);outline-offset:2px}
+.theme svg{width:16px;height:16px;pointer-events:none}
+
+.panel{padding-block:clamp(3rem,7vh,5rem) 0}
+.panel[hidden]{display:none!important}
+@keyframes fade{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel:not([hidden]){animation:fade .5s ease both}
+.sec{padding-block:clamp(3.5rem,8vh,5rem) 0}
+.hero + .sec{margin-top:0;border-top:1px solid var(--line);padding-top:clamp(3.5rem,8vh,5rem)}
+.sec-head{display:block}
+.num{display:block;font-family:var(--display);font-style:italic;font-size:1.75rem;color:var(--muted);line-height:1;margin-bottom:.7rem}
+
+/* hero */
+.hero{position:relative;min-height:clamp(520px,calc(100svh - 65px - clamp(3rem,7vh,5rem)),860px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:clamp(1.5rem,4vw,4rem);align-items:start;padding-bottom:clamp(1.5rem,4vh,3rem)}
+.hero .key{margin-top:2rem}
+.hero-copy{display:flex;flex-direction:column}
+.hero-copy{position:relative;z-index:2;max-width:600px;grid-column:1;grid-row:1}
+.hero h1{margin-top:1.3rem;max-width:15ch}
+@media(min-width:901px) and (max-height:780px){.hero h1{font-size:min(5rem,6vw,10vh);margin-top:1rem}.hero .lead{margin-top:1.1rem}.hero .key{margin-top:1.4rem}}
+.hero .lead{font-size:clamp(1.08rem,1.6vw,1.22rem);color:var(--soft);max-width:30em;margin-top:1.4rem;}
+.key{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin-top:2rem;font-size:.85rem;color:var(--muted)}
+.k{display:inline-flex;align-items:center;gap:.5rem}
+.k i{width:20px;border-top:1.5px dashed var(--muted)}
+.k i.a{border-top:2px solid var(--accent)}
+.hero .teaser{grid-column:2;grid-row:1;align-self:center;margin:0;pointer-events:none;position:relative}
+.hero .teaser svg{display:block;width:100%;height:auto;max-height:calc(100svh - 190px);margin-left:auto}
+
+/* plates */
+.plate{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0}
+.plate svg{display:block;width:100%;height:auto}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.duo{display:grid;grid-template-columns:1fr 1fr}
+.duo>div+div{border-left:1px solid var(--line)}
+.duo svg{display:block;width:100%;height:auto}
+
+.pair{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:3rem;align-items:start;margin-top:0}
+.pair>.plate{margin-top:2.45rem}
+.pair.flip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.pair.flip .txt{order:2}
+/* I: the record timeline */
+.intro.rec-intro{display:block}
+.rec-txt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3rem;margin-top:1.4rem}
+.rec-txt .body{max-width:none}.rec-txt .body+.body{margin-top:0}
+@media(max-width:900px){.rec-txt{grid-template-columns:minmax(0,1fr);gap:1rem}}
+.tl-fig{margin-top:2rem;padding:1.2rem 1.4rem}
+.plate svg.tl-tall{display:none}
+.tl-med>circle,.tl-medc{fill:var(--bg-2);stroke:var(--line-2);stroke-width:1.2}
+@media(max-width:760px){.plate svg.tl-wide{display:none}.plate svg.tl-tall{display:block;max-width:380px;margin:0 auto}.plate .tl-tall .lab{font-size:13.5px}.plate .tl-tall .name{font-size:21px}.tl-fig{padding:1rem .8rem}}
+@media(max-width:900px){.rec-intro .rec-txt{padding-top:0}}
+@media(min-width:761px) and (max-width:1000px){.plate .tl-wide .lab{font-size:16px}.plate .tl-wide .name{font-size:25px}}
+
+/* research map */
+.rmap{margin-top:2.4rem;padding:1.4rem 1.2rem}.rmap svg{display:block;width:100%;max-width:820px;margin:0 auto;height:auto}
+@media(max-width:600px){.rmap{display:none}}
+.dv-doc{stroke-width:1.3}
+
+.runner{fill:var(--accent)}
+@media(prefers-reduced-motion:no-preference){
+  .scrolly .lp-path{stroke-dasharray:var(--L,400);stroke-dashoffset:var(--L,400);transition:stroke-dashoffset .9s cubic-bezier(.45,0,.25,1)}
+  .scrolly.seen .lp-path{stroke-dashoffset:0}
+  .scrolly .lp-path{marker-end:none}
+  .scrolly.drawn .lp-path{marker-end:url(#mI)}
+  .scrolly .st-loop .runner{opacity:0;transition:opacity .4s .7s}
+  .scrolly.seen .st-loop .runner{opacity:1}
+}
+/* I: discovery figure */
+.dv-fig{display:flex;justify-content:center;align-items:center;padding:1.4rem 1rem}
+.plate .dv{width:100%;max-width:470px;height:auto}
+.dv .dv-o{stroke-width:1.3;stroke-opacity:.75}
+@media(max-width:600px){.plate .dv .lab{font-size:16.5px}.plate .dv .name{font-size:26px}}
+@media(prefers-reduced-motion:no-preference){.dv-fig .dv-end2{opacity:0}.dv-fig.seen .dv-end2{opacity:1;transition:opacity .4s ease var(--dl)}}
+@media(min-width:601px){.plate .dv .lab{font-size:13.5px}}
+@media(min-width:901px){.dv-pair .dv-fig{position:sticky;top:96px}}
+@media(max-width:900px){.pair.dv-pair{gap:0}.dv-pair>.txt>p+p{margin-top:1rem}.dv-pair>.txt{display:contents}.pair.dv-pair .dv-fig{order:2;margin-top:1.8rem}.dv-pair .formula{order:3;margin-top:1.8rem}}
+.txt .formula{margin:1.8rem 0 0;padding:1rem 0 .2rem 1.4rem}
+.gate{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:2 5;stroke-linecap:round}
+.rec{fill:var(--accent-wash);stroke:var(--accent);stroke-width:1.5}
+.dv-end{fill:var(--bg-2);stroke:var(--muted);stroke-width:1.3}
+.dv .ink{stroke-width:1.2;stroke-opacity:.7}
+.climb,.sp-path,.lp-path,.dv-try,.dv-right,.dv-false{vector-effect:none!important}
+.dv-false{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-linecap:round}
+@media(prefers-reduced-motion:no-preference){
+  .dv-fig .dv-try,.dv-fig .dv-right,.dv-fig .dv-false{stroke-dasharray:1;stroke-dashoffset:1}
+  .dv-fig .dv-end{opacity:0}
+  .dv-fig.seen .dv-try,.dv-fig.seen .dv-right,.dv-fig.seen .dv-false{stroke-dashoffset:0;transition:stroke-dashoffset 1.1s cubic-bezier(.45,0,.25,1) var(--dl)}
+  .dv-fig.seen .dv-end{opacity:1;transition:opacity .4s ease var(--dl)}
+}
+
+.plate svg.w3m{display:none}
+@media(min-width:601px){.w3wrap{padding:.8rem 0 .2rem}.w3wrap svg.w3{max-width:520px;margin:0 auto}}
+@media(min-width:601px) and (max-width:900px){.w3wrap svg.w3{max-width:440px}}
+@media(max-width:600px){.w3wrap{display:none}.plate svg.w3m{display:block;width:100%;max-width:290px;height:auto;margin:.6rem auto .2rem}.plate .w3m .lab{font-size:12px}.plate .w3m .name{font-size:22px}}
+/* II scrolly: figure stays put while the text steps through */
+.scrolly{display:none}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){
+  .has-scrolly{align-items:start}
+  .has-scrolly .duo-fig{display:none}
+  .has-scrolly .scrolly{display:block;position:sticky;top:max(80px,calc(50vh + 32px - min(29vh,250px) - 19px));margin-top:2.45rem;padding:1.2rem 0}
+  .scrolly .sc-row svg{max-height:min(56vh,480px)}
+  .steps p[data-step]{padding-bottom:5vh;transition:color .4s}
+  .steps p[data-step]:last-child{padding-bottom:20vh}
+}
+
+@media(prefers-reduced-motion:no-preference){
+  .steps:not(.s0) p[data-step]:not(.on){color:var(--muted)}
+  .st{transition:opacity .6s ease,transform .6s ease}
+  .scrolly[data-step="1"] .st-loop{transform:translateY(64px)}
+  .scrolly .st-loopname .name,.scrolly .st-spname .name{font-size:24px}
+  .scrolly .st-flat,.scrolly .st-loopname,.scrolly .st-spiral,.scrolly .st-spname,.scrolly .st-rise{opacity:0}
+  .scrolly[data-step="2"] .st-flat,.scrolly[data-step="2"] .st-loopname{opacity:1}
+  .scrolly[data-step="3"] .st-loop,.scrolly[data-step="3"] .st-loopname{opacity:0}.scrolly[data-step="3"] .st-flat{opacity:1}
+  .scrolly[data-step="3"] .st-spiral,.scrolly[data-step="3"] .st-spname,.scrolly[data-step="3"] .st-rise{opacity:1}
+  .sp-path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.45,0,.25,1)}
+  .scrolly[data-step="3"] .sp-path{stroke-dashoffset:0}
+}
+@media(max-width:900px) and (prefers-reduced-motion:no-preference){
+  .has-scrolly .duo-fig{display:none}
+  .has-scrolly .scrolly{display:block;margin-top:1.8rem;padding:1rem .6rem}
+  .scrolly[data-step="1"] .st-loop{transform:translateY(34px)}
+}
+@media(max-width:600px){.plate.scrolly .lab{font-size:17px}.plate.scrolly .name{font-size:26px}.scrolly .st-loopname .name,.scrolly .st-spname .name{font-size:28px}}
+
+/* figure vocabulary: two text sizes, two stroke weights */
+.name{font-family:var(--display);font-size:22px;fill:var(--ink)}
+.lab{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+.ink-t{fill:var(--ink)} .acc-t{fill:var(--accent)}
+.ink{fill:none;stroke:var(--soft);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.acc{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.axis{stroke:var(--line-2);stroke-width:1} .rule{stroke:var(--line);stroke-width:1}
+.dot-a{fill:var(--accent)} .dot-i{fill:var(--soft)}
+.world{fill:none;stroke:var(--line-2);stroke-width:1;stroke-dasharray:4 5}
+.icon{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.mk-i{fill:none;stroke:var(--soft);stroke-width:1.5}.mk-a{fill:none;stroke:var(--accent);stroke-width:1.8}
+.base{fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 7;stroke-linecap:round}
+.ink,.acc,.climb,.base,.axis,.icon,.lead{vector-effect:non-scaling-stroke}
+.climb{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.loopg path{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round}
+.loopg circle{fill:var(--accent)}
+.tm{font-family:var(--mono);font-size:12px;fill:var(--muted)} .ta{fill:var(--accent)}
+.hero .tm{font-size:22px}
+.anim .climb{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 12s cubic-bezier(.45,0,.25,1) infinite}
+.anim .loopg{opacity:0;animation:pop 12s ease infinite}
+.anim .tag-end{opacity:0;animation:pop 12s ease infinite;animation-delay:6.2s}
+@keyframes draw{0%{stroke-dashoffset:1}8%{stroke-dashoffset:1}62%{stroke-dashoffset:0}90%{stroke-dashoffset:0;opacity:1}98%{stroke-dashoffset:0;opacity:0}100%{stroke-dashoffset:1;opacity:0}}
+.anim .base-reveal{transform-box:fill-box;transform-origin:left center;animation:grow 12s cubic-bezier(.45,0,.25,1) infinite}
+.anim .base-t{animation:pop2 12s ease infinite}
+@keyframes grow{0%{transform:scaleX(0)}8%{transform:scaleX(0)}62%{transform:scaleX(1)}98%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes pop2{0%{opacity:0}55%{opacity:0}62%{opacity:1}90%{opacity:1}98%{opacity:0}100%{opacity:0}}
+@keyframes pop{0%{opacity:0}4%{opacity:1}36%{opacity:1}44%{opacity:0}100%{opacity:0}}
+
+/* I: formula + times */
+.intro{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:3rem;align-items:end}
+.formula{margin-left:-1.5rem;padding:1.2rem 0 .2rem 1.5rem;border-left:1px solid var(--line-2)}
+.formula .f{font-family:var(--display);font-size:1.6rem;white-space:nowrap}
+.formula .f i{font-style:italic}
+.formula .f .op{color:var(--muted)}
+.defs{margin:.9rem 0 0;display:grid;gap:.25rem}
+.defs>div{display:grid;grid-template-columns:1.4rem minmax(0,1fr);gap:.6rem;align-items:baseline}
+.defs dt{font-family:var(--display);font-size:1.2rem;font-style:italic;color:var(--ink)}
+.defs dd{margin:0;font-size:.85rem;color:var(--soft)}
+.sum{margin-top:1rem!important;font-family:var(--display);font-size:1.2rem;line-height:1.4;color:var(--ink)}
+.sum b{font-weight:500;font-style:italic;color:inherit}
+.plain{margin-top:.8rem!important;font-size:.85rem;color:var(--soft);line-height:1.55}
+.plain i{font-family:var(--display);font-size:1.2rem;line-height:1}
+
+
+
+/* about */
+.who{margin-top:clamp(3.5rem,8vh,5rem);padding-top:clamp(3.5rem,8vh,5rem);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:3rem;align-items:start}
+.who h2{margin-top:1rem}
+.who .body{margin-top:1.1rem}
+.who .body a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
+.who .body a:hover{border-bottom-color:var(--accent)}
+.facts{margin:0;border-top:1px solid var(--line)}
+.facts>div{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.facts dt{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:0;font-size:.95rem;text-align:right;display:flex;gap:.8rem;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.facts dd a{text-decoration:none;border-bottom:1px solid var(--line-2)}
+.facts dd a:hover{border-bottom-color:var(--accent)}
+.copy{all:unset;cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--muted);border:1px solid var(--line-2);border-radius:999px;padding:.35rem .7rem}
+.copy:focus-visible{outline:1.5px solid var(--accent);outline-offset:2px}
+.copy:hover{border-color:var(--accent)}
+
+
+.more{margin-top:2.2rem;display:flex;gap:.7rem;flex-wrap:wrap}
+.btn{all:unset;cursor:pointer;font-family:var(--sans);font-size:.9rem;padding:.7rem 1.1rem;border-radius:999px;border:1px solid var(--line-2);color:var(--ink);transition:border-color .2s,background .2s}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{border-color:var(--ink)}
+.btn.primary:hover{border-color:var(--accent);color:var(--accent)}
+.btn:focus-visible{outline:1.5px solid var(--accent);outline-offset:2px}
+
+/* research + writing */
+.page-head h1{font-size:clamp(2.4rem,5vw,3.8rem);line-height:1;margin-top:1rem}
+.page-head .body{margin-top:1rem}
+.ineq{margin-top:2.6rem;display:flex;align-items:baseline;flex-wrap:wrap;gap:.2rem .05rem;font-family:var(--display);font-size:clamp(1.8rem,3.4vw,2.6rem)}
+.ineq .t{cursor:default;border-bottom:1.5px solid transparent;padding-inline:0;transition:color .2s,border-color .2s}
+.ineq .t.on{color:var(--accent);border-bottom-color:var(--accent)}
+.ineq .op{color:var(--ink);padding-inline:.2em}
+.ineq i{font-style:italic}
+.cols{margin-top:2.4rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.col{background:var(--bg-2);padding:1.4rem 1.2rem 1.5rem;transition:background .2s}
+.col.on{background:var(--accent-wash)}
+.col[data-term=loop]{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 2.4rem}
+.col[data-term=loop] ul{grid-column:2/4;margin-top:1.8rem}
+.col[data-term=loop] .col-head{border-bottom:0;margin:0}
+.col[data-term=loop] ul{display:grid;grid-template-columns:1fr 1fr;gap:0 2.4rem}
+.col[data-term=loop] li{border-bottom:0}
+.col-head{display:flex;flex-direction:column;gap:.15rem;padding-bottom:1rem;border-bottom:1px solid var(--line);margin-bottom:.4rem}
+.col-sym{font-family:var(--display);font-size:1.6rem;color:var(--ink);line-height:1.1}
+.col-sym i{font-style:italic}
+.col-sym .arr{font-family:var(--sans);font-size:1.3rem}
+.col-name{font-family:var(--display);font-size:1.4rem;margin-top:.3rem}
+.col-role{font-size:.85rem;color:var(--muted)}
+.col ul{list-style:none;margin:0;padding:0}
+.col li{padding:.85rem 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:.2rem}
+.col li:last-child{border-bottom:0}
+.a-name{font-family:var(--display);font-size:1.25rem;line-height:1.2}
+.a-sum{font-size:.9rem;color:var(--soft);line-height:1.55}
+.note{margin-top:1.4rem;font-size:.9rem;color:var(--muted)}
+.entries{list-style:none;margin:2.6rem 0 0;padding:0;border-top:1px solid var(--line)}
+.entry{display:grid;grid-template-columns:7rem minmax(0,1fr) auto;gap:.4rem 1.6rem;align-items:baseline;padding:1.4rem 0;border-bottom:1px solid var(--line)}
+.e-date{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.e-body{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.e-title{font-family:var(--display);font-size:1.6rem;line-height:1.15}
+.e-sum{color:var(--soft);font-size:.95rem;max-width:40em}
+.e-kind{font-family:var(--mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+
+main{min-height:calc(100svh - 65px - 8rem)}
+footer{margin-top:4rem;padding-bottom:1.6rem;font-size:.85rem;color:var(--muted)}
+footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+@media(max-width:900px){
+  .intro{grid-template-columns:minmax(0,1fr);gap:1.8rem}.formula{margin-left:0;padding:.2rem 0 .2rem 1.2rem}
+  .pair,.pair.flip,.who{grid-template-columns:minmax(0,1fr);gap:1.6rem}
+  .pair.flip .txt{order:0}.pair>.plate{margin-top:0}
+  .col{padding:1.1rem .9rem 1.2rem}
+}
+@media(min-width:701px) and (max-width:900px){.hero{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);column-gap:1.5rem;min-height:0;padding-bottom:2rem}.hero h1{font-size:clamp(2.2rem,5.6vw,3rem)}.hero .lead{font-size:1rem}.hero .tm{font-size:26px}}
+@media(max-width:700px){.hero{display:block;position:relative;min-height:0;padding-bottom:1rem}.hero-copy{position:relative;z-index:2}.hero .teaser{position:absolute;z-index:0;right:0;top:-1rem;width:60%;opacity:.45;margin:0;-webkit-mask-image:linear-gradient(205deg,#000 25%,transparent 62%);mask-image:linear-gradient(205deg,#000 25%,transparent 62%)}.hero .teaser svg{width:100%;height:auto;max-height:none}.hero .teaser .tm{display:none}.hero .key{margin-top:1.6rem}}
+@media(min-width:901px){.duo .lab{font-size:14.3px}.w3 .lab{font-size:13.9px}.duo .name,.w3 .name{font-size:24px}}
+@media(min-width:901px) and (max-width:1100px){.hero .tm{font-size:27px}.plate .lab{font-size:14.5px}.plate.scrolly .lab{font-size:15.5px}}
+
+@media(max-width:600px){
+  .hero .tm{font-size:30px}
+  .mark span{display:none}.mark{min-width:44px;min-height:44px}.tabs{gap:.6rem}.tabs [role=tab]{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}.theme{width:44px;height:44px}
+  .more .btn{flex:1;text-align:center}.ineq{flex-wrap:wrap}.ineq .t[data-term=loop]{display:none}
   
-/* ---------- hero: the grid stops being straight ---------- */
-.hero{position:relative}
-.bend{position:absolute;z-index:-1;pointer-events:none;top:-5vh;left:46%;width:54vw;height:114%;
--webkit-mask-image:linear-gradient(90deg,transparent 0,#000 32%,#000 78%,transparent 100%);
-mask-image:linear-gradient(90deg,transparent 0,#000 32%,#000 78%,transparent 100%)}
-.bend svg{display:block;width:100%;height:100%}
-.bend path{fill:none;stroke:rgba(91,75,232,.34);stroke-width:1;vector-effect:non-scaling-stroke}
-.bend path.lead{stroke:rgba(91,75,232,.6);stroke-width:1.5}
-@keyframes sweep{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
-.hero>.bend{animation:sweep 1.5s cubic-bezier(.3,.72,.2,1) .28s both}
-@media(max-width:900px){.bend{left:-28px;right:-28px;width:auto;top:auto;bottom:0;height:14vh;
--webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%);
-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 84%,transparent 100%)}
-.bend path:nth-child(2n-1){display:none}}
-@media(prefers-reduced-motion:reduce){.hero>.bend{animation:none;clip-path:none}}
+  .entry{grid-template-columns:minmax(0,1fr)}
+
+  .plate .lab{font-size:14px}
+  .duo{grid-template-columns:1fr 1fr}.duo .lab{display:none}.plate .duo .name{font-size:34px}.duo svg{padding:.4rem 0}
+  .plate .w3 .lab{font-size:19px}
+  .plate .w3 .il{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.anim .climb{stroke-dashoffset:0}.anim .loopg,.anim .tag-end{opacity:1}}
+@media(max-width:700px){.cols{grid-template-columns:minmax(0,1fr)}.col[data-term=loop]{grid-template-columns:minmax(0,1fr)}.col[data-term=loop] ul{grid-column:auto;grid-template-columns:1fr;margin-top:.4rem}}
+/* late overrides (must follow base rules) */
+@media(max-width:600px){.ineq{font-size:clamp(1.3rem,6.6vw,1.8rem)}.more .btn{white-space:nowrap}
+  .facts dd a,.copy{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;box-sizing:border-box}
+  .plate .dv .lab{font-size:19px}}
+@media(max-width:400px){.more .btn{flex-basis:100%}}
+@media(max-width:360px){.formula .f{font-size:1.3rem}}
+@media(min-width:601px) and (max-width:760px){.plate svg.tl-tall{max-width:460px}}
+@media(min-width:601px) and (max-width:900px){.w3wrap svg.w3{max-width:580px}}
+@media(max-width:600px){.plate svg.w3m{max-width:330px}}
+@media(max-width:340px){.plate .dv .lab{font-size:17px}}
+@media(min-width:901px) and (max-width:1100px){.plate.rmap .lab{font-size:12px}}
+@media(min-width:701px) and (max-width:900px){.hero .tm{font-size:31px}}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){.steps p[data-step]:last-child{padding-bottom:35vh}}
+@media print{
+  :root:not(#_p){--bg:#fff;--bg-2:#fff;--bg-3:#f4f4f1;--ink:#16181c;--soft:#474b52;--muted:#686c73;--line:rgba(22,24,28,.12);--line-2:rgba(22,24,28,.25);--accent:#1f4e79;--accent-wash:rgba(31,78,121,.07);--accent-fill:rgba(31,78,121,.13);--header:#fff;color-scheme:light}
+  .climb,.dv-try,.dv-right,.dv-false,.sp-path,.lp-path{stroke-dashoffset:0!important;animation:none!important;transition:none!important}
+  .dv-end,.runner{opacity:1!important}
+  .top{position:static!important}.theme{display:none}
+}
+.icon .nn circle{fill:var(--bg-2);stroke:var(--ink)}
+.gap-t{fill:var(--soft)}
+.dv-false{stroke:var(--soft);stroke-width:1.6;stroke-dasharray:.022 .016}
+@media(prefers-reduced-motion:no-preference){.dv-fig .dv-false{stroke-dasharray:1}.dv-fig.done .dv-false{stroke-dasharray:.022 .016;stroke-dashoffset:0;transition:none}}
+@media print{.dv-false{stroke-dasharray:.022 .016!important}}
+.fl{fill:var(--ink)}.fl-a{fill:var(--accent)}
+@media(prefers-reduced-motion:reduce){.flow{display:none}}
+@media print{.flow{display:none}}
+.sc-row{display:flex;gap:.6rem;align-items:flex-start;justify-content:center}
+.sc-row svg{display:block;flex:1 1 0;min-width:0;width:50%;height:auto}
+.sc-flat,.sc-rise{vector-effect:none!important}
+.scrolly[data-step="3"] .sc-flat{stroke:var(--muted);stroke-dasharray:.012 .012!important;stroke-dashoffset:0!important}
+.scrolly[data-step="3"] .sc-flat-t{fill:var(--muted)}
+@media(prefers-reduced-motion:no-preference){
+  .sc-flat,.sc-rise{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.5s cubic-bezier(.45,0,.25,1) .2s}
+  .scrolly[data-step="2"] .sc-flat,.scrolly[data-step="3"] .sc-rise{stroke-dashoffset:0}
+  .scrolly .st-flat .lab,.scrolly .st-rise .lab{opacity:0;transition:opacity .5s 1.2s}
+  .scrolly[data-step="2"] .st-flat .lab,.scrolly[data-step="3"] .st-flat .lab,.scrolly[data-step="3"] .st-rise .lab{opacity:1}
+}
+@media(max-width:600px){.sc-row{flex-direction:column;align-items:center;gap:0}.sc-row svg{flex:none;width:100%;max-width:330px}.sc-row .sc-chart{margin-top:-1rem}}
+.dep-i,.dep-a{fill:var(--soft)}
+.ts{fill:var(--ink);font-weight:500}
+.rail{fill:none}.tl-med-r>circle,.tl-medc-r{fill:var(--bg-2);stroke:var(--line-2);stroke-dasharray:2 3}.tl-med-r .icon,.tl-medc-r+.tl-ic .icon{stroke:var(--soft)}.rail-h{fill:var(--soft);letter-spacing:.06em}
+.rail-in{stroke-dasharray:2 6;stroke:var(--muted)}
+.tl-med-a>circle,.tl-medc-a{stroke:var(--accent)!important;stroke-width:1.6!important}
+@media(prefers-reduced-motion:no-preference){
+  .tl-fig .tls{opacity:0;transition:opacity .6s ease var(--d)}
+  .tl-fig.seen .tls{opacity:1}
+  .tl-fig .tl-reveal{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);transition:transform 4.2s linear}
+  .tl-fig .tl-reveal-v{transform-box:fill-box;transform-origin:center top;transform:scaleY(0);transition:transform 4.2s linear}
+  .tl-fig.seen .tl-reveal,.tl-fig.seen .tl-reveal-v{transform:none}
+}
+@media print{.tl-fig .tls{opacity:1!important}.tl-fig .tl-reveal,.tl-fig .tl-reveal-v{transform:none!important}}
+[data-replay]{position:relative}
+.replay{all:unset;box-sizing:border-box;position:absolute;top:.55rem;right:.55rem;z-index:3;width:32px;height:32px;display:grid;place-items:center;border-radius:999px;border:1px solid var(--line-2);background:var(--bg-2);color:var(--muted);cursor:pointer;opacity:.75;transition:opacity .2s,color .2s,border-color .2s}
+.replay svg{width:15px!important;height:15px!important;max-height:none!important;margin:0!important}
+.replay:hover,.replay:focus-visible{opacity:1;color:var(--accent);border-color:var(--accent)}
+.replay:focus-visible{outline:1.5px solid var(--accent);outline-offset:2px}
+.hero .teaser .replay{pointer-events:auto;top:auto;bottom:0;right:0}
+.no-tr,.no-tr *{transition:none!important;animation:none!important}
+.rot{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 .5rem}
+.rot-r{margin:2.4rem 0 -1.8rem}
+@media(prefers-reduced-motion:reduce){.replay{display:none}}
+@media(max-width:700px){.hero .teaser .replay{display:none}}
+@media(max-width:900px){.scrolly .replay{display:none}}
+@media print{.replay{display:none}}
 </style>
 </head>
 <body>
-<header><div class="wrap hdr">
-<a class="mark" href="/"><i></i>nonlinearity</a>
-<nav>
-<a href="#curve">The curve</a>
-<a href="#scope">Scope</a>
-<a href="#about">About</a>
-<a class="btn" href="mailto:hi@nonlinearity.net">Get in touch &#8599;</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="mI" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-i" d="M1,1 L8,5 L1,9"/></marker>
+<marker id="mA" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-a" d="M1,1 L8,5 L1,9"/></marker>
+</defs></svg>
+
+<header class="top"><div class="wrap">
+<a class="mark" href="#idea" data-go="idea"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27 C13 27 17 22 21 13 C23 8 25 5 29 3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span>Nonlinearity</span></a>
+<div class="right">
+<nav class="tabs" role="tablist" aria-label="Sections">
+<button role="tab" id="t-idea" aria-controls="idea" aria-selected="true" data-go="idea">Idea</button>
+<button role="tab" id="t-research" aria-controls="research" aria-selected="false" data-go="research">Research</button>
+<button role="tab" id="t-writing" aria-controls="writing" aria-selected="false" data-go="writing">Writing</button>
 </nav>
+<button class="theme" type="button" id="themeBtn" aria-label="Theme: follow system"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.8 A6.2 6.2 0 0 1 8 14.2 Z" fill="currentColor"/></svg></button>
+</div>
 </div></header>
 
 <main class="wrap">
+<section class="panel" id="idea" role="tabpanel" aria-labelledby="t-idea">
 
-<section class="hero">
-<div class="bend" aria-hidden="true"><svg viewBox="0 0 620 700" preserveAspectRatio="none">
-<path d="M0,130 C186,130 422,99 620,26"/>
-<path d="M0,202 C186,202 422,167 620,85"/>
-<path d="M0,274 C186,274 422,235 620,144"/>
-<path d="M0,346 C186,346 422,303 620,203"/>
-<path d="M0,418 C186,418 422,371 620,262"/>
-<path d="M0,490 C186,490 422,439 620,321"/>
-<path d="M0,562 C186,562 422,507 620,380"/>
-<path class="lead" d="M0,634 C186,634 422,576 620,439"/>
+<div class="hero">
+<figure class="teaser anim" aria-hidden="false" data-replay="hero"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><svg viewBox="0 0 900 760" preserveAspectRatio="xMaxYMid meet" role="img" aria-label="A dashed straight line labeled search alone. Above it, a chain of S-shaped curves: each rises and flattens, and the next starts where the last one ended, never dropping back. Each rise is larger than the one before.">
+<defs><clipPath id="baseClip" clipPathUnits="userSpaceOnUse"><rect class="base-reveal" x="36" y="0" width="830" height="760"/></clipPath></defs><path class="base" clip-path="url(#baseClip)" d="M40,720 L860,560"/>
+<path class="climb" pathLength="1" d="M40.0,716.5 L43.5,716.2 L47.0,715.8 L50.5,715.4 L54.0,715.0 L57.5,714.5 L61.0,714.1 L64.5,713.6 L68.0,713.1 L71.5,712.5 L75.0,712.0 L78.5,711.4 L82.0,710.9 L85.5,710.3 L89.0,709.7 L92.5,709.1 L96.0,708.5 L99.5,707.9 L103.0,707.2 L106.5,706.6 L110.0,705.9 L113.5,705.3 L117.0,704.6 L120.5,703.9 L124.0,703.3 L127.5,702.6 L131.0,701.9 L134.5,701.2 L138.0,700.4 L141.5,699.7 L145.0,698.8 L148.5,698.0 L152.0,697.0 L155.5,695.8 L159.0,694.4 L162.5,692.6 L166.0,690.5 L169.5,688.0 L173.0,685.2 L176.5,682.2 L180.0,679.2 L183.5,676.4 L187.0,673.7 L190.5,671.3 L194.0,669.2 L197.5,667.3 L201.0,665.7 L204.5,664.3 L208.0,663.1 L211.5,662.1 L215.0,661.3 L218.5,660.6 L222.0,660.0 L225.5,659.5 L229.0,659.1 L232.5,658.7 L236.0,658.4 L239.5,658.1 L243.0,657.8 L246.5,657.5 L250.0,657.2 L253.5,656.9 L257.0,656.5 L260.5,656.1 L264.0,655.6 L267.5,655.0 L271.0,654.4 L274.5,653.6 L278.0,652.7 L281.5,651.7 L285.0,650.4 L288.5,648.9 L292.0,647.2 L295.5,645.2 L299.0,642.8 L302.5,640.2 L306.0,637.1 L309.5,633.7 L313.0,630.0 L316.5,625.9 L320.0,621.5 L323.5,616.9 L327.0,612.1 L330.5,607.3 L334.0,602.4 L337.5,597.7 L341.0,593.1 L344.5,588.8 L348.0,584.8 L351.5,581.2 L355.0,577.9 L358.5,574.9 L362.0,572.3 L365.5,570.0 L369.0,568.1 L372.5,566.4 L376.0,564.9 L379.5,563.7 L383.0,562.6 L386.5,561.7 L390.0,560.9 L393.5,560.3 L397.0,559.7 L400.5,559.1 L404.0,558.6 L407.5,558.2 L411.0,557.8 L414.5,557.3 L418.0,556.9 L421.5,556.5 L425.0,556.0 L428.5,555.5 L432.0,554.9 L435.5,554.3 L439.0,553.6 L442.5,552.7 L446.0,551.8 L449.5,550.7 L453.0,549.5 L456.5,548.0 L460.0,546.4 L463.5,544.5 L467.0,542.4 L470.5,539.9 L474.0,537.1 L477.5,534.0 L481.0,530.4 L484.5,526.5 L488.0,522.0 L491.5,517.2 L495.0,511.8 L498.5,506.0 L502.0,499.8 L505.5,493.2 L509.0,486.3 L512.5,479.0 L516.0,471.6 L519.5,464.1 L523.0,456.5 L526.5,449.0 L530.0,441.7 L533.5,434.7 L537.0,428.0 L540.5,421.6 L544.0,415.7 L547.5,410.2 L551.0,405.2 L554.5,400.6 L558.0,396.5 L561.5,392.9 L565.0,389.6 L568.5,386.7 L572.0,384.1 L575.5,381.8 L579.0,379.9 L582.5,378.1 L586.0,376.6 L589.5,375.3 L593.0,374.1 L596.5,373.1 L600.0,372.2 L603.5,371.4 L607.0,370.7 L610.5,370.0 L614.0,369.4 L617.5,368.9 L621.0,368.3 L624.5,367.8 L628.0,367.3 L631.5,366.8 L635.0,366.3 L638.5,365.8 L642.0,365.2 L645.5,364.6 L649.0,364.0 L652.5,363.3 L656.0,362.5 L659.5,361.6 L663.0,360.6 L666.5,359.4 L670.0,358.2 L673.5,356.7 L677.0,355.1 L680.5,353.3 L684.0,351.3 L687.5,349.0 L691.0,346.4 L694.5,343.5 L698.0,340.2 L701.5,336.6 L705.0,332.5 L708.5,328.0 L712.0,323.0 L715.5,317.5 L719.0,311.5 L722.5,304.9 L726.0,297.8 L729.5,290.0 L733.0,281.7 L736.5,272.9 L740.0,263.5 L743.5,253.7 L747.0,243.4 L750.5,232.8 L754.0,222.0 L757.5,210.9 L761.0,199.8 L764.5,188.8 L768.0,177.8 L771.5,167.1 L775.0,156.7 L778.5,146.7 L782.0,137.1 L785.5,128.0 L789.0,119.5 L792.5,111.5 L796.0,104.1 L799.5,97.3 L803.0,91.0 L806.5,85.3 L810.0,80.1 L813.5,75.4 L817.0,71.1 L820.5,67.3 L824.0,63.9 L827.5,60.9 L831.0,58.2 L834.5,55.8 L838.0,53.7 L841.5,51.8 L845.0,50.1 L848.5,48.6 L852.0,47.3 L855.5,46.2 L859.0,45.2"/>
+<g class="loopg" style="animation-delay:2.4s"><circle cx="290" cy="648" r="4"/><path d="M304,639 a13,13 0 1 0 -5,-17"/><path d="M295,621 l5,7 l7,-4"/></g>
+<g class="loopg" style="animation-delay:3.8s"><circle cx="472" cy="539" r="4"/><path d="M486,530 a15,15 0 1 0 -5,-19"/><path d="M477,510 l5,7 l7,-4"/></g>
+<g class="loopg" style="animation-delay:5s"><circle cx="703" cy="335" r="4"/><path d="M717,326 a17,17 0 1 0 -5,-21"/><path d="M708,300 l5,7 l7,-4"/></g>
+<text class="tm base-t" x="860" y="546" text-anchor="end">search alone</text><text class="tm ax" x="40" y="752">effort, log scale →</text>
+<text class="tm ta tag-end" x="860" y="40" text-anchor="end">each plateaus; the next starts higher</text>
+</svg></figure>
+<div class="hero-copy">
+<p class="label">Nonlinearity · an AI research lab</p>
+<h1>Anything that learns from its <em>own best</em> stops being linear.</h1>
+<p class="lead">Trying more, on its own, climbs a straight line: steady and slow. Keep what works, learn from it and try again: the line bends upward, and keeps bending as long as every part of the loop keeps improving. People have always worked this way. Models now do too, and much faster.</p>
+<p class="key"><span class="k"><i></i>search alone</span><span class="k"><i class="a"></i>learning from the best</span></p>
+</div>
+</div>
+
+
+<section class="sec" aria-labelledby="h-rec">
+<div class="intro rec-intro"><div class="sec-head"><span class="num">I</span><h2 id="h-rec">Thought goes out, and <em>comes back in</em>.</h2></div>
+<div class="rec-txt"><p class="body">People learn in two moves: put thought outside the head, then take it back in. Everything written down that can be read back is the record. Every new medium made the first move cheaper and faster: speech, writing, print, code, the web. The second stayed slow. Each person still had to read, practice and learn it themselves.</p>
+<p class="body">A language model is the first medium that makes the second move too. Trained on the record, it takes it in; asked, it writes back out. Out and in now happen in one system, at machine speed. That is why the medium became a learner, and why the next step is models improving models.</p></div></div>
+<figure class="plate tl-fig" data-replay="seen"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><svg class="tl tl-wide" viewBox="0 0 1000 322" role="img" aria-label="Two tracks. Writing out: speech more than 50,000 years ago, writing 5,000, print 1,000, code 80, the web 35 years ago, each step sooner than the last. Reading in: a person reads and practices, over years. The two tracks meet at language models, 5 years ago, which both read the record in and write it out. Next: models that improve models.">
+<defs><clipPath id="tlClipW" clipPathUnits="userSpaceOnUse"><rect class="tl-reveal" x="100" y="0" width="900" height="322"/></clipPath></defs>
+<text class="lab rail-h" x="18" y="125">write out</text><text class="lab rail-h" x="18" y="245">read in</text>
+<g clip-path="url(#tlClipW)">
+<path class="axis rail" d="M100,120 L650,120 C694,120 690,180 730,180"/>
+<path class="axis rail rail-in" d="M100,240 L650,240 C694,240 690,180 730,180"/>
+<path class="acc" d="M730,180 L831,180 L871,180" marker-end="url(#mA)"/>
+</g>
+<text class="lab tls" x="110" y="280" style="--d:0.05s">same reader every time · years</text>
+<g class="tls" style="--d:0.23s">
+<text class="name" x="150" y="82" text-anchor="middle">speech</text><text class="lab" x="150" y="50" text-anchor="middle">50,000+ years ago</text>
+<g class="tl-med" transform="translate(150,120)"><circle r="21"/><g class="icon" transform="scale(.82)"><path d="M-12,-11 H12 a4,4 0 0 1 4,4 V5 a4,4 0 0 1 -4,4 H-1 L-8,15 V9 H-12 a4,4 0 0 1 -4,-4 V-7 a4,4 0 0 1 4,-4 Z"/><path d="M-8,-3 H8 M-8,2 H3"/></g></g><g class="tl-med tl-med-r" transform="translate(150,240)"><circle r="16"/><g transform="scale(.9)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g></g>
+<g class="tls" style="--d:0.91s">
+<text class="name" x="295" y="166" text-anchor="middle">writing</text><text class="lab" x="295" y="194" text-anchor="middle">5,000 years ago</text>
+<g class="tl-med" transform="translate(295,120)"><circle r="21"/><g class="icon" transform="scale(.82)"><rect x="-11" y="-14" width="22" height="28" rx="4"/><path d="M-6,-7 H6 M-6,-2 H6 M-6,3 H4 M-6,8 H1"/></g></g><g class="tl-med tl-med-r" transform="translate(295,240)"><circle r="16"/><g transform="scale(.9)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g></g>
+<g class="tls" style="--d:1.38s">
+<text class="name" x="396" y="82" text-anchor="middle">print</text><text class="lab" x="396" y="50" text-anchor="middle">1,000 years ago</text>
+<g class="tl-med" transform="translate(396,120)"><circle r="21"/><g class="icon" transform="scale(.82)"><path d="M0,-8 C-6,-12 -12,-12 -16,-10 V10 C-12,8 -6,8 0,12 C6,8 12,8 16,10 V-10 C12,-12 6,-12 0,-8 Z M0,-8 V12"/></g></g><g class="tl-med tl-med-r" transform="translate(396,240)"><circle r="16"/><g transform="scale(.9)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g></g>
+<g class="tls" style="--d:2.13s">
+<text class="name" x="555" y="166" text-anchor="middle">code</text><text class="lab" x="555" y="194" text-anchor="middle">80 years ago</text>
+<g class="tl-med" transform="translate(555,120)"><circle r="21"/><g class="icon" transform="scale(.82)"><path d="M-6,-10 L-15,0 L-6,10 M6,-10 L15,0 L6,10 M3,-14 L-3,14"/></g></g><g class="tl-med tl-med-r" transform="translate(555,240)"><circle r="16"/><g transform="scale(.9)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g></g>
+<g class="tls" style="--d:2.37s">
+<text class="name" x="607" y="82" text-anchor="middle">the web</text><text class="lab" x="607" y="50" text-anchor="middle">35 years ago</text>
+<g class="tl-med" transform="translate(607,120)"><circle r="21"/><g class="icon" transform="scale(.82)"><circle cx="0" cy="0" r="13"/><ellipse cx="0" cy="0" rx="5.5" ry="13"/><path d="M-13,0 H13 M-11,-6.5 H11 M-11,6.5 H11"/></g></g><g class="tl-med tl-med-r" transform="translate(607,240)"><circle r="16"/><g transform="scale(.9)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g></g>
+<g class="tls" style="--d:2.94s"><g class="tl-med tl-med-a" transform="translate(730,180)"><circle r="23"/><g class="icon" transform="scale(.82)"><g transform="scale(.74)"><g class="nn"><path d="M-18,-11 L0,-18 M-18,-11 L0,0 M-18,-11 L0,18 M-18,11 L0,-18 M-18,11 L0,0 M-18,11 L0,18 M0,-18 L18,0 M0,0 L18,0 M0,18 L18,0"/><circle cx="-18" cy="-11" r="4"/><circle cx="-18" cy="11" r="4"/><circle cx="0" cy="-18" r="4"/><circle cx="0" cy="0" r="4"/><circle cx="0" cy="18" r="4"/><circle cx="18" cy="0" r="4"/></g></g></g></g><text class="name" x="730" y="236" text-anchor="middle">models</text><text class="lab" x="730" y="264" text-anchor="middle">5 years ago</text></g>
+<g class="tls" style="--d:3.41s"><circle class="dot-a" cx="831" cy="180" r="5.5"/><text class="name ta-name" x="893" y="188">next</text><text class="lab acc-t" x="985" y="216" text-anchor="end">models improve models</text></g>
+<text class="lab" x="18" y="314">years ago, log scale → now</text><text class="lab gap-t" x="985" y="314" text-anchor="end">gap to the next step: 45,000 → 4,000 → 920 → 45 → 30 years</text>
+</svg>
+<svg class="tl tl-tall" viewBox="0 0 360 538" role="img" aria-label="Two tracks. Writing out: speech, writing, print, code, the web, each step sooner than the last. Reading in: a person reads and practices, over years. The tracks meet at language models, which both read the record in and write it out. Next: models that improve models.">
+<defs><clipPath id="tlClipT" clipPathUnits="userSpaceOnUse"><rect class="tl-reveal-v" x="0" y="40" width="360" height="498"/></clipPath></defs>
+<text class="lab rail-h" x="12" y="24">write out ↓</text><text class="lab rail-h" x="348" y="24" text-anchor="end">read in · years ↓</text>
+<g clip-path="url(#tlClipT)">
+<path class="axis rail" d="M34,40 L34,394"/>
+<path class="axis rail rail-in" d="M330,40 L330,330 C330,360 84,350 43,384"/>
+<path class="acc" d="M34,394 L34,452 L34,482" marker-end="url(#mA)"/>
+</g>
+
+<g class="tls" style="--d:0.30s"><circle class="tl-medc" cx="34" cy="76" r="12"/><g class="icon tl-ic" transform="translate(34,76) scale(.46)"><g><path d="M-12,-11 H12 a4,4 0 0 1 4,4 V5 a4,4 0 0 1 -4,4 H-1 L-8,15 V9 H-12 a4,4 0 0 1 -4,-4 V-7 a4,4 0 0 1 4,-4 Z"/><path d="M-8,-3 H8 M-8,2 H3"/></g></g><text class="name" x="60" y="83">speech</text><text class="lab" x="296" y="81" text-anchor="end">50,000+ years ago</text><circle class="tl-medc tl-medc-r" cx="330" cy="76" r="11"/><g class="tl-ic" transform="translate(330,76) scale(.62)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g>
+<g class="tls" style="--d:0.94s"><circle class="tl-medc" cx="34" cy="152" r="12"/><g class="icon tl-ic" transform="translate(34,152) scale(.46)"><g><rect x="-11" y="-14" width="22" height="28" rx="4"/><path d="M-6,-7 H6 M-6,-2 H6 M-6,3 H4 M-6,8 H1"/></g></g><text class="name" x="60" y="159">writing</text><text class="lab" x="296" y="157" text-anchor="end">5,000 years ago</text><circle class="tl-medc tl-medc-r" cx="330" cy="152" r="11"/><g class="tl-ic" transform="translate(330,152) scale(.62)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g>
+<g class="tls" style="--d:1.39s"><circle class="tl-medc" cx="34" cy="205" r="12"/><g class="icon tl-ic" transform="translate(34,205) scale(.46)"><g><path d="M0,-8 C-6,-12 -12,-12 -16,-10 V10 C-12,8 -6,8 0,12 C6,8 12,8 16,10 V-10 C12,-12 6,-12 0,-8 Z M0,-8 V12"/></g></g><text class="name" x="60" y="212">print</text><text class="lab" x="296" y="210" text-anchor="end">1,000 years ago</text><circle class="tl-medc tl-medc-r" cx="330" cy="205" r="11"/><g class="tl-ic" transform="translate(330,205) scale(.62)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g>
+<g class="tls" style="--d:2.10s"><circle class="tl-medc" cx="34" cy="288" r="12"/><g class="icon tl-ic" transform="translate(34,288) scale(.46)"><g><path d="M-6,-10 L-15,0 L-6,10 M6,-10 L15,0 L6,10 M3,-14 L-3,14"/></g></g><text class="name" x="60" y="295">code</text><text class="lab" x="296" y="293" text-anchor="end">80 years ago</text><circle class="tl-medc tl-medc-r" cx="330" cy="288" r="11"/><g class="tl-ic" transform="translate(330,288) scale(.62)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g>
+<g class="tls" style="--d:2.33s"><circle class="tl-medc" cx="34" cy="316" r="12"/><g class="icon tl-ic" transform="translate(34,316) scale(.46)"><g><circle cx="0" cy="0" r="13"/><ellipse cx="0" cy="0" rx="5.5" ry="13"/><path d="M-13,0 H13 M-11,-6.5 H11 M-11,6.5 H11"/></g></g><text class="name" x="60" y="323">the web</text><text class="lab" x="296" y="321" text-anchor="end">35 years ago</text><circle class="tl-medc tl-medc-r" cx="330" cy="316" r="11"/><g class="tl-ic" transform="translate(330,316) scale(.62)"><g class="icon"><circle cx="0" cy="-8" r="4"/><path d="M-10,2 C-7,0 -3,0 0,2 C3,0 7,0 10,2 V11 C7,9 3,9 0,11 C-3,9 -7,9 -10,11 Z M0,2 V11"/></g></g></g>
+<g class="tls" style="--d:2.99s"><circle class="tl-medc tl-medc-a" cx="34" cy="394" r="14"/><g class="icon tl-ic" transform="translate(34,394) scale(.5)"><g><g transform="scale(.74)"><g class="nn"><path d="M-18,-11 L0,-18 M-18,-11 L0,0 M-18,-11 L0,18 M-18,11 L0,-18 M-18,11 L0,0 M-18,11 L0,18 M0,-18 L18,0 M0,0 L18,0 M0,18 L18,0"/><circle cx="-18" cy="-11" r="4"/><circle cx="-18" cy="11" r="4"/><circle cx="0" cy="-18" r="4"/><circle cx="0" cy="0" r="4"/><circle cx="0" cy="18" r="4"/><circle cx="18" cy="0" r="4"/></g></g></g></g><text class="name" x="60" y="401">models</text><text class="lab" x="60" y="423">read in and write out · 5 years ago</text></g>
+<g class="tls" style="--d:3.47s"><circle class="dot-a" cx="34" cy="452" r="5.5"/><text class="name" x="60" y="459">next</text><text class="lab acc-t" x="348" y="457" text-anchor="end">models improve models</text></g>
+<text class="lab gap-t" x="12" y="512">gap to the next step:</text><text class="lab gap-t" x="12" y="532">45,000 → 4,000 → 920 → 45 → 30 years</text></svg></figure>
+</section>
+
+<section class="sec" aria-labelledby="h-II">
+<div class="pair dv-pair">
+<div class="txt"><div class="sec-head"><span class="num">II</span><h2 id="h-II">Some things only need to work <em>once</em>.</h2></div>
+<p class="body" style="margin-top:1.2rem">Code that runs, a proof, a working design, a research result. Any single attempt may fail, and nobody knows in advance which one will succeed. One success is enough, as long as we can tell it is real. That is discovery.</p>
+<p class="body">Whether a success is within reach depends on three things: how likely an attempt is to be right, how many attempts we can afford and how often a wrong answer passes for right. An exam gives one attempt, so only the chance of being right, <i>p</i>, matters. Research gives many, and then all three matter.</p>
+<aside class="formula" aria-label="The inequality, a rule of thumb"><p class="rot">a rule of thumb</p><div class="f">log 1/<i>p</i> <span class="op">≲</span> min(log <i>N</i>, log 1/<i>ε</i>)</div>
+<dl class="defs"><div><dt><i>p</i></dt><dd>chance one attempt is right</dd></div><div><dt><i>N</i></dt><dd>number of attempts we can afford</dd></div><div><dt><i>ε</i></dt><dd>chance a wrong answer passes for right</dd></div></dl>
+<p class="sum">Training decides what a model makes <b>probable</b>. Search decides how many attempts it can <b>afford</b>. Verification decides how far the results can be <b>trusted</b>.</p>
+<p class="plain">We can count on one real success when a right answer turns up within <i>N</i> attempts, and turns up more often than a wrong one slips through.</p></aside></div>
+<figure class="plate dv-fig" data-replay="seen"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><svg class="dv" viewBox="0 0 560 440" role="img" aria-label="Discovery. Many attempts fan out from one start. Most are wrong and stop at the check. One right attempt passes the check and is kept in the record; one success is enough. Sometimes a wrong attempt slips past the check and gets in too. From the record, the one success is copied and reused again and again.">
+<line class="gate" x1="250" x2="250" y1="46" y2="404"/>
+<text class="name" x="250" y="30" text-anchor="middle">check</text>
+<path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,60 232,60" style="--dl:0.00s"/><circle class="dv-end" cx="236" cy="60" r="3.5" style="--dl:0.50s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,92 232,92" style="--dl:0.05s"/><circle class="dv-end" cx="236" cy="92" r="3.5" style="--dl:0.55s"/><path class="acc dv-right" pathLength="1" d="M40,224 C120,224 142,124 250,124 C280,124 270,214 298,214" style="--dl:0.9s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,156 232,156" style="--dl:0.15s"/><circle class="dv-end" cx="236" cy="156" r="3.5" style="--dl:0.65s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,188 232,188" style="--dl:0.20s"/><circle class="dv-end" cx="236" cy="188" r="3.5" style="--dl:0.70s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,220 232,220" style="--dl:0.25s"/><circle class="dv-end" cx="236" cy="220" r="3.5" style="--dl:0.75s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,252 232,252" style="--dl:0.30s"/><circle class="dv-end" cx="236" cy="252" r="3.5" style="--dl:0.80s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,284 232,284" style="--dl:0.35s"/><circle class="dv-end" cx="236" cy="284" r="3.5" style="--dl:0.85s"/><path class="dv-false" pathLength="1" d="M40,224 C120,224 142,316 250,316 C280,316 270,234 298,234" style="--dl:1.1s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,348 232,348" style="--dl:0.45s"/><circle class="dv-end" cx="236" cy="348" r="3.5" style="--dl:0.95s"/><path class="ink dv-try" pathLength="1" d="M40,224 C120,224 142,380 232,380" style="--dl:0.50s"/><circle class="dv-end" cx="236" cy="380" r="3.5" style="--dl:1.00s"/>
+<circle class="dot-i" cx="40" cy="224" r="4.5"/>
+<text class="name" x="16" y="204">try</text>
+<text class="lab" x="16" y="424">N attempts</text>
+<text class="lab" x="250" y="424" text-anchor="middle">most are wrong</text>
+<rect class="rec" x="298" y="198" width="104" height="52" rx="6"/>
+<g class="icon dv-doc" transform="translate(313,224)"><path d="M-6,-9 H3 L7,-5 V9 H-6 Z M3,-9 V-5 H7 M-3,-2 H4 M-3,2 H4 M-3,6 H2"/></g><text class="name" x="366" y="230" text-anchor="middle">record</text>
+<text class="lab acc-t" x="304" y="186">one is enough</text>
+<text class="lab" x="306" y="272">a wrong one</text>
+<text class="lab" x="306" y="296">can slip in</text>
+<path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,132 490,132" style="--dl:1.90s"/><circle class="dot-a dv-end2" cx="494" cy="132" r="3.5" style="--dl:2.40s"/><path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,166 490,166" style="--dl:1.96s"/><circle class="dot-a dv-end2" cx="494" cy="166" r="3.5" style="--dl:2.46s"/><path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,200 490,200" style="--dl:2.02s"/><circle class="dot-a dv-end2" cx="494" cy="200" r="3.5" style="--dl:2.52s"/><path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,234 490,234" style="--dl:2.08s"/><circle class="dot-a dv-end2" cx="494" cy="234" r="3.5" style="--dl:2.58s"/><path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,268 490,268" style="--dl:2.14s"/><circle class="dot-a dv-end2" cx="494" cy="268" r="3.5" style="--dl:2.64s"/><path class="acc dv-right dv-o" pathLength="1" d="M402,224 C440,224 450,302 490,302" style="--dl:2.20s"/><circle class="dot-a dv-end2" cx="494" cy="302" r="3.5" style="--dl:2.70s"/><text class="lab acc-t" x="494" y="110" text-anchor="middle">used again</text><text class="lab acc-t" x="494" y="330" text-anchor="middle">and again</text></svg></figure>
+</div>
+</section>
+
+<section class="sec" aria-labelledby="h-III">
+<div class="pair has-scrolly">
+<div class="txt steps"><div class="sec-head"><span class="num">III</span><h2 id="h-III">A loop, then <em>a spiral</em>.</h2></div>
+<p class="body" style="margin-top:1.2rem" data-step="1">Once found, a success becomes part of the record. Working code is copied, a tool is rebuilt, a pipeline just runs. Discovery stays uncertain; what it finds is kept.</p>
+<p class="body" data-step="2">A model is probabilistic and can forget. What it writes down does not: text, code and results stay put. So what is kept stays kept. But if nothing else improves, the loop climbs one curve, flattens and stops at its weakest part.</p>
+<p class="body" data-step="3">When each turn also improves training, search and verification, the limits rise, and the loop opens into a spiral: each turn larger than the last.</p></div>
+<figure class="plate scrolly" data-replay="seen"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sc-row"><svg class="sc-loop" viewBox="0 0 330 345" role="img" aria-label="A loop of train, search and verify. Each turn keeps what works, so what is kept stays kept, but if nothing else improves its curve flattens. When every part improves each turn, the loop opens into a spiral and its curve keeps rising.">
+<g class="st st-loop"><path class="ink lp-path" d="M160.0,70.0 A70,70 0 1 1 115.0,86.4" marker-end="url(#mI)"/><circle class="runner" r="5"><animateMotion dur="2.6s" repeatCount="indefinite" path="M160,70 A70,70 0 1 1 160,210 A70,70 0 1 1 160,70"/></circle><circle class="dot-i" cx="160.0" cy="70.0" r="4.5"/><text class="name" x="160" y="32" text-anchor="middle">train</text><text class="lab" x="160" y="54" text-anchor="middle">raises p</text><circle class="dot-i" cx="220.6" cy="175.0" r="4.5"/><text class="name" x="226" y="202" text-anchor="start">search</text><text class="lab" x="226" y="232" text-anchor="start">raises N</text><circle class="dot-i" cx="99.4" cy="175.0" r="4.5"/><text class="name" x="22" y="236" text-anchor="start">verify</text><text class="lab" x="22" y="262" text-anchor="start">lowers ε</text></g>
+<g class="st st-loopname"><text class="name" x="160" y="300" text-anchor="middle">loop</text><text class="lab" x="160" y="326" text-anchor="middle">what is kept stays kept</text></g>
+<g class="st st-spiral" transform="translate(-320,6)"><path id="spPath" class="acc sp-path" pathLength="1" d="M480.0,134.0 L480.5,133.7 L481.1,133.4 L481.7,133.1 L482.3,132.9 L483.0,132.8 L483.7,132.7 L484.4,132.7 L485.2,132.8 L486.0,133.0 L486.8,133.2 L487.6,133.5 L488.3,133.9 L489.1,134.4 L489.8,135.0 L490.5,135.6 L491.2,136.4 L491.8,137.2 L492.3,138.1 L492.8,139.0 L493.2,140.0 L493.5,141.1 L493.7,142.2 L493.8,143.3 L493.9,144.5 L493.8,145.7 L493.6,147.0 L493.4,148.2 L493.0,149.4 L492.5,150.6 L491.8,151.8 L491.1,153.0 L490.3,154.1 L489.3,155.2 L488.3,156.2 L487.1,157.1 L485.8,158.0 L484.5,158.7 L483.1,159.4 L481.6,159.9 L480.0,160.3 L478.4,160.6 L476.7,160.8 L475.0,160.8 L473.3,160.7 L471.5,160.4 L469.8,160.0 L468.1,159.5 L466.4,158.8 L464.7,157.9 L463.1,156.9 L461.5,155.8 L460.1,154.5 L458.7,153.1 L457.4,151.5 L456.2,149.8 L455.2,148.1 L454.3,146.2 L453.5,144.2 L452.9,142.1 L452.5,140.0 L452.2,137.8 L452.1,135.6 L452.2,133.3 L452.5,131.1 L452.9,128.8 L453.6,126.5 L454.4,124.3 L455.4,122.2 L456.6,120.0 L458.0,118.0 L459.6,116.1 L461.3,114.3 L463.2,112.6 L465.2,111.0 L467.4,109.6 L469.7,108.4 L472.2,107.3 L474.7,106.5 L477.3,105.8 L480.0,105.3 L482.7,105.1 L485.5,105.1 L488.3,105.2 L491.2,105.7 L494.0,106.3 L496.7,107.2 L499.4,108.3 L502.1,109.6 L504.6,111.2 L507.0,113.0 L509.4,114.9 L511.5,117.1 L513.5,119.5 L515.4,122.0 L517.0,124.7 L518.4,127.5 L519.6,130.5 L520.6,133.6 L521.3,136.7 L521.8,140.0 L522.1,143.3 L522.0,146.7 L521.7,150.0 L521.1,153.4 L520.3,156.7 L519.2,160.0 L517.8,163.2 L516.2,166.3 L514.3,169.3 L512.1,172.1 L509.7,174.8 L507.1,177.3 L504.3,179.6 L501.3,181.7 L498.1,183.6 L494.7,185.2 L491.2,186.6 L487.6,187.7 L483.8,188.5 L480.0,189.0 L476.1,189.2 L472.2,189.1 L468.3,188.7 L464.4,188.0 L460.6,186.9 L456.8,185.6 L453.1,183.9 L449.5,182.0 L446.1,179.7 L442.8,177.2 L439.7,174.4 L436.9,171.3 L434.2,168.0 L431.9,164.5 L429.8,160.8 L427.9,156.9 L426.4,152.9 L425.2,148.7 L424.4,144.4 L423.8,140.0 L423.6,135.6 L423.8,131.1 L424.3,126.6 L425.2,122.2 L426.5,117.8 L428.0,113.5 L430.0,109.3 L432.2,105.3 L434.8,101.4 L437.8,97.8 L441.0,94.3 L444.5,91.1 L448.2,88.1 L452.2,85.5 L456.4,83.1 L460.9,81.1 L465.5,79.5 L470.2,78.2 L475.1,77.2 L480.0,76.7 L485.0,76.5 L490.0,76.7 L495.0,77.4 L500.0,78.4 L504.9,79.8 L509.7,81.7 L514.4,83.9 L518.9,86.4 L523.2,89.4 L527.3,92.7 L531.2,96.3 L534.7,100.2 L538.0,104.5 L540.9,109.0 L543.5,113.7 L545.7,118.7 L547.5,123.8 L548.9,129.1 L549.9,134.5 L550.5,140.0 L550.6,145.6 L550.3,151.1 L549.6,156.7 L548.4,162.2 L546.8,167.7 L544.7,173.0 L542.2,178.1 L539.4,183.1 L536.1,187.9 L532.4,192.4 L528.3,196.6 L524.0,200.5 L519.3,204.1 L514.3,207.3 L509.0,210.1 L503.6,212.5 L497.9,214.5 L492.0,216.0 L486.1,217.1 L480.0,217.7 L473.9,217.8 L467.7,217.4 L461.6,216.6 L455.6,215.2 L449.6,213.4 L443.8,211.1 L438.1,208.4 L432.7,205.2 L427.5,201.5 L422.5,197.5 L417.9,193.0 L413.7,188.2 L409.8,183.0 L406.3,177.5 L403.3,171.8 L400.7,165.8 L398.6,159.6 L396.9,153.2 L395.8,146.6 L395.2,140.0 L395.1,133.3 L395.5,126.6 L396.5,119.9 L398.0,113.3 L400.0,106.9 L402.5,100.5 L405.5,94.4 L409.0,88.5 L413.0,82.8 L417.5,77.5 L422.3,72.5 L427.6,67.9 L433.2,63.7 L439.2,59.9 L445.5,56.7 L452.0,53.9 L458.8,51.6 L465.7,49.8 L472.8,48.6 L480.0,48.0" marker-end="url(#mA)"/><circle class="runner" r="5.5"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#spPath"/></animateMotion></circle></g>
+<g class="st st-spname" transform="translate(-320,0)"><text class="name" x="480" y="300" text-anchor="middle">spiral</text><text class="lab acc-t" x="480" y="326" text-anchor="middle">p, N and ε improve each turn</text></g>
+</svg><svg class="sc-chart" viewBox="0 0 330 345" role="img" aria-label="Performance against compute and time. With one loop alone, the curve rises and flattens. When every part improves each turn, it keeps climbing: each rise starts higher than the last.">
+<line class="axis" x1="40" x2="312" y1="290" y2="290"/><line class="axis" x1="40" x2="40" y1="290" y2="40"/>
+<text class="lab" x="44" y="34">performance</text><text class="lab" x="312" y="318" text-anchor="end">compute · time →</text>
+<g class="st st-flat"><path class="ink sc-flat" pathLength="1" d="M40,288 C84,288 96,206 140,200 C180,195 240,194 312,194"/><text class="lab sc-flat-t" x="312" y="220" text-anchor="end">one loop: flattens</text></g>
+<g class="st st-rise"><path class="acc sc-rise" pathLength="1" d="M40,288 C84,288 96,206 140,200 L158,199 C188,198 196,140 222,132 L240,131 C266,130 280,74 312,46"/><text class="lab acc-t" x="52" y="68">spiral: keeps climbing</text></g>
+</svg></div></figure>
+<figure class="plate duo-fig"><div class="duo"><div><svg viewBox="0 -14 330 444" role="img" aria-label="A loop: train, search, verify drawn as a circle with an arrow. It is the same size every turn, and what it keeps stays kept. Below it, a curve that rises and flattens."><path class="ink" d="M160.0,70.0 A70,70 0 1 1 115.0,86.4" marker-end="url(#mI)"/><circle class="dot-i" cx="160.0" cy="70.0" r="4.5"/><text class="name" x="160" y="32" text-anchor="middle">train</text><text class="lab" x="160" y="54" text-anchor="middle">raises p</text><circle class="dot-i" cx="220.6" cy="175.0" r="4.5"/><text class="name" x="226" y="202" text-anchor="start">search</text><text class="lab" x="226" y="232" text-anchor="start">raises N</text><circle class="dot-i" cx="99.4" cy="175.0" r="4.5"/><text class="name" x="22" y="236" text-anchor="start">verify</text><text class="lab" x="22" y="262" text-anchor="start">lowers ε</text><text class="name" x="160" y="300" text-anchor="middle">loop</text><text class="lab" x="160" y="326" text-anchor="middle">what is kept stays kept</text><line class="axis" x1="80" x2="240" y1="404" y2="404"/><path class="ink" d="M80,402 C110,402 116,376 140,374 C170,372 200,372 240,372"/></svg></div><div><svg viewBox="315 -14 330 444" role="img" aria-label="A spiral: the same loop, growing each turn because every part of it improves too. Below it, a curve that keeps rising."><path class="acc" d="M480.0,134.0 L480.5,133.7 L481.1,133.4 L481.7,133.1 L482.3,132.9 L483.0,132.8 L483.7,132.7 L484.4,132.7 L485.2,132.8 L486.0,133.0 L486.8,133.2 L487.6,133.5 L488.3,133.9 L489.1,134.4 L489.8,135.0 L490.5,135.6 L491.2,136.4 L491.8,137.2 L492.3,138.1 L492.8,139.0 L493.2,140.0 L493.5,141.1 L493.7,142.2 L493.8,143.3 L493.9,144.5 L493.8,145.7 L493.6,147.0 L493.4,148.2 L493.0,149.4 L492.5,150.6 L491.8,151.8 L491.1,153.0 L490.3,154.1 L489.3,155.2 L488.3,156.2 L487.1,157.1 L485.8,158.0 L484.5,158.7 L483.1,159.4 L481.6,159.9 L480.0,160.3 L478.4,160.6 L476.7,160.8 L475.0,160.8 L473.3,160.7 L471.5,160.4 L469.8,160.0 L468.1,159.5 L466.4,158.8 L464.7,157.9 L463.1,156.9 L461.5,155.8 L460.1,154.5 L458.7,153.1 L457.4,151.5 L456.2,149.8 L455.2,148.1 L454.3,146.2 L453.5,144.2 L452.9,142.1 L452.5,140.0 L452.2,137.8 L452.1,135.6 L452.2,133.3 L452.5,131.1 L452.9,128.8 L453.6,126.5 L454.4,124.3 L455.4,122.2 L456.6,120.0 L458.0,118.0 L459.6,116.1 L461.3,114.3 L463.2,112.6 L465.2,111.0 L467.4,109.6 L469.7,108.4 L472.2,107.3 L474.7,106.5 L477.3,105.8 L480.0,105.3 L482.7,105.1 L485.5,105.1 L488.3,105.2 L491.2,105.7 L494.0,106.3 L496.7,107.2 L499.4,108.3 L502.1,109.6 L504.6,111.2 L507.0,113.0 L509.4,114.9 L511.5,117.1 L513.5,119.5 L515.4,122.0 L517.0,124.7 L518.4,127.5 L519.6,130.5 L520.6,133.6 L521.3,136.7 L521.8,140.0 L522.1,143.3 L522.0,146.7 L521.7,150.0 L521.1,153.4 L520.3,156.7 L519.2,160.0 L517.8,163.2 L516.2,166.3 L514.3,169.3 L512.1,172.1 L509.7,174.8 L507.1,177.3 L504.3,179.6 L501.3,181.7 L498.1,183.6 L494.7,185.2 L491.2,186.6 L487.6,187.7 L483.8,188.5 L480.0,189.0 L476.1,189.2 L472.2,189.1 L468.3,188.7 L464.4,188.0 L460.6,186.9 L456.8,185.6 L453.1,183.9 L449.5,182.0 L446.1,179.7 L442.8,177.2 L439.7,174.4 L436.9,171.3 L434.2,168.0 L431.9,164.5 L429.8,160.8 L427.9,156.9 L426.4,152.9 L425.2,148.7 L424.4,144.4 L423.8,140.0 L423.6,135.6 L423.8,131.1 L424.3,126.6 L425.2,122.2 L426.5,117.8 L428.0,113.5 L430.0,109.3 L432.2,105.3 L434.8,101.4 L437.8,97.8 L441.0,94.3 L444.5,91.1 L448.2,88.1 L452.2,85.5 L456.4,83.1 L460.9,81.1 L465.5,79.5 L470.2,78.2 L475.1,77.2 L480.0,76.7 L485.0,76.5 L490.0,76.7 L495.0,77.4 L500.0,78.4 L504.9,79.8 L509.7,81.7 L514.4,83.9 L518.9,86.4 L523.2,89.4 L527.3,92.7 L531.2,96.3 L534.7,100.2 L538.0,104.5 L540.9,109.0 L543.5,113.7 L545.7,118.7 L547.5,123.8 L548.9,129.1 L549.9,134.5 L550.5,140.0 L550.6,145.6 L550.3,151.1 L549.6,156.7 L548.4,162.2 L546.8,167.7 L544.7,173.0 L542.2,178.1 L539.4,183.1 L536.1,187.9 L532.4,192.4 L528.3,196.6 L524.0,200.5 L519.3,204.1 L514.3,207.3 L509.0,210.1 L503.6,212.5 L497.9,214.5 L492.0,216.0 L486.1,217.1 L480.0,217.7 L473.9,217.8 L467.7,217.4 L461.6,216.6 L455.6,215.2 L449.6,213.4 L443.8,211.1 L438.1,208.4 L432.7,205.2 L427.5,201.5 L422.5,197.5 L417.9,193.0 L413.7,188.2 L409.8,183.0 L406.3,177.5 L403.3,171.8 L400.7,165.8 L398.6,159.6 L396.9,153.2 L395.8,146.6 L395.2,140.0 L395.1,133.3 L395.5,126.6 L396.5,119.9 L398.0,113.3 L400.0,106.9 L402.5,100.5 L405.5,94.4 L409.0,88.5 L413.0,82.8 L417.5,77.5 L422.3,72.5 L427.6,67.9 L433.2,63.7 L439.2,59.9 L445.5,56.7 L452.0,53.9 L458.8,51.6 L465.7,49.8 L472.8,48.6 L480.0,48.0" marker-end="url(#mA)"/><text class="name" x="480" y="300" text-anchor="middle">spiral</text><text class="lab acc-t" x="480" y="326" text-anchor="middle">p, N and ε improve each turn</text><line class="axis" x1="400" x2="560" y1="404" y2="404"/><path class="acc" d="M400,402 C416,402 420,396 434,395 L446,395 C460,395 464,384 478,383 L490,383 C504,383 508,364 522,362 L530,362 C542,362 548,352 554,346 L560,338"/></svg></div></div></figure>
+</div>
+</section>
+
+<section class="sec" aria-labelledby="h-IV">
+<div class="pair flip">
+<div class="txt"><div class="sec-head"><span class="num">IV</span><h2 id="h-IV">The world, the&nbsp;models, <em>and&nbsp;us</em>.</h2></div>
+<p class="body" style="margin-top:1.2rem">People and models are two learners in one world. Each builds on it and learns from it, so each learns from what the other leaves behind.</p>
+<p class="body">Part of the world changes on its own; the rest is what learners build. Every result left behind makes the next one easier to reach. Both build on the same world, so their two loops share one record and turn as one spiral.</p></div>
+<figure class="plate"><div class="scroll w3wrap"><svg class="w3" viewBox="0 0 640 440" role="img" aria-label="The world: nature, experiments, papers, code, compute and tests. Some of it changes on its own; the rest is what learners have put in. Below, two learners, people and models. Each builds on it and learns from it. Each also learns on its own: people reflect and practice, models train on their own best.">
+<rect class="world" x="24" y="24" width="592" height="198" rx="16"/>
+<text class="name" x="40" y="54">the world</text>
+<text class="lab" x="40" y="78">everything that is not a learner</text><g class="flow dep"><rect class="dep-i" x="594.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.0550;0.0650;0.9688;1"/></rect><rect class="dep-a" x="581.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.1800;0.1900;0.9688;1"/></rect><rect class="dep-i" x="568.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.3050;0.3150;0.9688;1"/></rect><rect class="dep-a" x="555.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.4300;0.4400;0.9688;1"/></rect><rect class="dep-i" x="542.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.5550;0.5650;0.9688;1"/></rect><rect class="dep-a" x="529.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.6800;0.6900;0.9688;1"/></rect><rect class="dep-i" x="516.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.8050;0.8150;0.9688;1"/></rect><rect class="dep-a" x="503.0" y="48.0" width="8" height="8" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.9300;0.9400;0.9688;1"/></rect></g>
+<g class="icon" transform="translate(88,160)"><g><path d="M-14,14 C-16,-6 0,-18 16,-18 C18,2 6,16 -14,14 Z"/><path d="M-12,12 L10,-12"/><animateTransform class="flow" attributeName="transform" type="rotate" values="-7;7;-7" dur="5s" repeatCount="indefinite"/></g></g><text class="lab il" x="88" y="206" text-anchor="middle">nature</text><g class="icon" transform="translate(182,160)"><path d="M-6,-18 L-6,-4 L-16,13 Q-18,18 -12,18 L12,18 Q18,18 16,13 L6,-4 L6,-18"/><path d="M-10,-18 L10,-18"/><path d="M-12,8 L12,8"/></g><text class="lab il" x="182" y="206" text-anchor="middle">experiments</text><g class="icon" transform="translate(276,160)"><rect x="-10" y="-18" width="24" height="32" rx="2"/><path d="M-14,-14 L-14,18 L10,18"/><path d="M-5,-10 L9,-10 M-5,-3 L9,-3 M-5,4 L5,4"/></g><text class="lab il" x="276" y="206" text-anchor="middle">papers</text><g class="icon" transform="translate(370,160)"><path d="M-7,-13 L-19,0 L-7,13 M7,-13 L19,0 L7,13 M4,-18 L-4,18"/></g><text class="lab il" x="370" y="206" text-anchor="middle">code</text><g class="icon" transform="translate(464,160)"><rect x="-16" y="-18" width="32" height="10" rx="2"/><rect x="-16" y="-5" width="32" height="10" rx="2"/><rect x="-16" y="8" width="32" height="10" rx="2"/><path d="M-11,-13 L-7,-13 M-11,0 L-7,0 M-11,13 L-7,13"/></g><text class="lab il" x="464" y="206" text-anchor="middle">compute</text><g class="icon" transform="translate(558,160)"><rect x="-15" y="-18" width="30" height="36" rx="3"/><path d="M-9,-8 L-6,-5 L-1,-11 M-9,6 L-6,9 L-1,3"/><path d="M3,-8 L10,-8 M3,6 L10,6"/></g><text class="lab il" x="558" y="206" text-anchor="middle">tests</text>
+<path class="ink" d="M162,316 L162,236" marker-end="url(#mI)"/>
+<path class="ink" d="M198,234 L198,314" marker-end="url(#mI)"/>
+<text class="lab" x="150" y="272" text-anchor="end">build<tspan class="ts" x="150" dy="20">days–months</tspan></text>
+<text class="lab" x="210" y="272">learn<tspan class="ts" x="210" dy="20">days–weeks</tspan></text>
+<path class="ink" d="M442,234 L442,314" marker-end="url(#mI)"/>
+<path class="ink" d="M478,316 L478,236" marker-end="url(#mI)"/>
+<text class="lab" x="430" y="272" text-anchor="end">pre-train<tspan class="ts" x="430" dy="20">months</tspan></text>
+<text class="lab" x="490" y="272">build<tspan class="ts" x="490" dy="20">minutes–days</tspan></text>
+<g class="icon" transform="translate(180,352)"><circle cx="-9" cy="-16" r="9"/><path d="M-26,14 C-26,-4 8,-4 8,14"/><circle cx="14" cy="-12" r="7"/><path d="M4,14 C6,2 28,0 30,14"/></g>
+<text class="name" x="180" y="398" text-anchor="middle">people</text>
+<g class="icon" transform="translate(460,350)"><g transform="scale(1.25)"><g class="nn"><path d="M-18,-11 L0,-18 M-18,-11 L0,0 M-18,-11 L0,18 M-18,11 L0,-18 M-18,11 L0,0 M-18,11 L0,18 M0,-18 L18,0 M0,0 L18,0 M0,18 L18,0"/><circle cx="-18" cy="-11" r="4"/><circle cx="-18" cy="11" r="4"/><circle cx="0" cy="-18" r="4"/><circle cx="0" cy="0" r="4"/><circle cx="0" cy="18" r="4"/><circle cx="18" cy="0" r="4"/></g></g></g>
+<text class="name" x="460" y="398" text-anchor="middle">models</text>
+<path class="acc" d="M136,370 C96,404 70,336 132,334" marker-end="url(#mA)"/>
+<text class="lab acc-t" x="30" y="428">practice · years</text>
+<path class="acc" d="M500,370 C540,404 566,336 506,334" marker-end="url(#mA)"/>
+<text class="lab acc-t" x="610" y="428" text-anchor="end">post-train on own best · weeks</text>
+<g class="flow"><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M162,312 L162,244" keyPoints="0;0;1;1" keyTimes="0;0;0.22;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0;0.03;0.19;0.22;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M442,238 L442,306" keyPoints="0;0;1;1" keyTimes="0;0.25;0.47;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.25;0.28;0.44;0.47;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M478,312 L478,244" keyPoints="0;0;1;1" keyTimes="0;0.5;0.72;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.5;0.53;0.69;0.72;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M198,238 L198,306" keyPoints="0;0;1;1" keyTimes="0;0.75;0.97;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.75;0.78;0.94;0.97;1"/></circle><circle class="fl-a" r="3.2"><animateMotion dur="3.2s" repeatCount="indefinite" path="M136,370 C96,404 70,336 132,334"/></circle><circle class="fl-a" r="3.2"><animateMotion dur="3.2s" begin="-1.6s" repeatCount="indefinite" path="M500,370 C540,404 566,336 506,334"/></circle></g>
 </svg></div>
-<h1>Anything that can improve itself stops being <em>linear</em>.</h1>
-<p class="lede">Recursive self-improvement is not only a story about AI agents improving AI agents. Anything that lives in a computer, and now anything that lives in language &mdash; code, proofs, experiments, entire fields of science &mdash; can read its own output and act on it. That feedback is what bends a straight line into a curve.</p>
-<div class="btns">
-<a class="b1" href="#curve">See the curve &#8595;</a>
-<a class="b2" href="mailto:hi@nonlinearity.net">Get in touch</a>
+<svg class="w3m" viewBox="0 0 360 500" role="img" aria-label="The world: nature, experiments, papers, code, compute and tests. Some of it changes on its own; the rest is what learners have put in. Below, two learners, people and models. Each builds on it and learns from it. Each also learns on its own: people reflect and practice, models train on their own best.">
+<rect class="world" x="8" y="8" width="344" height="268" rx="14"/>
+<text class="name" x="26" y="42">the world</text>
+<text class="lab" x="26" y="64">everything that is not a learner</text><g class="flow dep"><rect class="dep-i" x="334.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.0550;0.0650;0.9688;1"/></rect><rect class="dep-a" x="322.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.1800;0.1900;0.9688;1"/></rect><rect class="dep-i" x="310.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.3050;0.3150;0.9688;1"/></rect><rect class="dep-a" x="298.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.4300;0.4400;0.9688;1"/></rect><rect class="dep-i" x="286.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.5550;0.5650;0.9688;1"/></rect><rect class="dep-a" x="274.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.6800;0.6900;0.9688;1"/></rect><rect class="dep-i" x="262.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.8050;0.8150;0.9688;1"/></rect><rect class="dep-a" x="250.5" y="32.5" width="7" height="7" rx="1.5" opacity="0"><animate attributeName="opacity" dur="19.2s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;0.9300;0.9400;0.9688;1"/></rect></g>
+<g class="icon" transform="translate(66,124)"><g><path d="M-14,14 C-16,-6 0,-18 16,-18 C18,2 6,16 -14,14 Z"/><path d="M-12,12 L10,-12"/><animateTransform class="flow" attributeName="transform" type="rotate" values="-7;7;-7" dur="5s" repeatCount="indefinite"/></g></g><text class="lab" x="66" y="166" text-anchor="middle">nature</text>
+<g class="icon" transform="translate(180,124)"><path d="M-6,-18 L-6,-4 L-16,13 Q-18,18 -12,18 L12,18 Q18,18 16,13 L6,-4 L6,-18"/><path d="M-10,-18 L10,-18"/><path d="M-12,8 L12,8"/></g><text class="lab" x="180" y="166" text-anchor="middle">experiments</text>
+<g class="icon" transform="translate(294,124)"><rect x="-10" y="-18" width="24" height="32" rx="2"/><path d="M-14,-14 L-14,18 L10,18"/><path d="M-5,-10 L9,-10 M-5,-3 L9,-3 M-5,4 L5,4"/></g><text class="lab" x="294" y="166" text-anchor="middle">papers</text>
+<g class="icon" transform="translate(66,212)"><path d="M-7,-13 L-19,0 L-7,13 M7,-13 L19,0 L7,13 M4,-18 L-4,18"/></g><text class="lab" x="66" y="254" text-anchor="middle">code</text>
+<g class="icon" transform="translate(180,212)"><rect x="-16" y="-18" width="32" height="10" rx="2"/><rect x="-16" y="-5" width="32" height="10" rx="2"/><rect x="-16" y="8" width="32" height="10" rx="2"/><path d="M-11,-13 L-7,-13 M-11,0 L-7,0 M-11,13 L-7,13"/></g><text class="lab" x="180" y="254" text-anchor="middle">compute</text>
+<g class="icon" transform="translate(294,212)"><rect x="-15" y="-18" width="30" height="36" rx="3"/><path d="M-9,-8 L-6,-5 L-1,-11 M-9,6 L-6,9 L-1,3"/><path d="M3,-8 L10,-8 M3,6 L10,6"/></g><text class="lab" x="294" y="254" text-anchor="middle">tests</text>
+<path class="ink" d="M96,350 L96,288" marker-end="url(#mI)"/>
+<path class="ink" d="M124,286 L124,348" marker-end="url(#mI)"/>
+<text class="lab" x="86" y="314" text-anchor="end">build<tspan class="ts" x="86" dy="18">days–months</tspan></text>
+<text class="lab" x="134" y="297">learn<tspan class="ts" x="134" dy="18">days–weeks</tspan></text>
+<path class="ink" d="M260,350 L260,288" marker-end="url(#mI)"/>
+<path class="ink" d="M232,286 L232,348" marker-end="url(#mI)"/>
+<text class="lab" x="270" y="314">build<tspan class="ts" x="270" dy="18">minutes–days</tspan></text>
+<text class="lab" x="222" y="336" text-anchor="end">pre-train<tspan class="ts" x="222" dy="18">months</tspan></text>
+<g class="icon" transform="translate(120,392)"><circle cx="-9" cy="-16" r="9"/><path d="M-26,14 C-26,-4 8,-4 8,14"/><circle cx="14" cy="-12" r="7"/><path d="M4,14 C6,2 28,0 30,14"/></g>
+<text class="name" x="120" y="438" text-anchor="middle">people</text>
+<g class="icon" transform="translate(240,392)"><g transform="scale(1.25)"><g class="nn"><path d="M-18,-11 L0,-18 M-18,-11 L0,0 M-18,-11 L0,18 M-18,11 L0,-18 M-18,11 L0,0 M-18,11 L0,18 M0,-18 L18,0 M0,0 L18,0 M0,18 L18,0"/><circle cx="-18" cy="-11" r="4"/><circle cx="-18" cy="11" r="4"/><circle cx="0" cy="-18" r="4"/><circle cx="0" cy="0" r="4"/><circle cx="0" cy="18" r="4"/><circle cx="18" cy="0" r="4"/></g></g></g>
+<text class="name" x="240" y="438" text-anchor="middle">models</text>
+<path class="acc" d="M76,410 C36,444 10,376 72,374" marker-end="url(#mA)"/>
+<path class="acc" d="M284,410 C324,444 350,376 288,374" marker-end="url(#mA)"/>
+<text class="lab acc-t" x="24" y="470">practice<tspan x="24" dy="18">years</tspan></text>
+<text class="lab acc-t" x="336" y="470" text-anchor="end">post-train on own best<tspan x="336" dy="18">weeks</tspan></text>
+<g class="flow"><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M96,346 L96,296" keyPoints="0;0;1;1" keyTimes="0;0;0.22;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0;0.03;0.19;0.22;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M232,290 L232,340" keyPoints="0;0;1;1" keyTimes="0;0.25;0.47;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.25;0.28;0.44;0.47;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M260,346 L260,296" keyPoints="0;0;1;1" keyTimes="0;0.5;0.72;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.5;0.53;0.69;0.72;1"/></circle><circle class="fl" r="4.4" opacity="0"><animateMotion dur="4.8s" repeatCount="indefinite" path="M124,290 L124,340" keyPoints="0;0;1;1" keyTimes="0;0.75;0.97;1" calcMode="linear"/><animate attributeName="opacity" dur="4.8s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.75;0.78;0.94;0.97;1"/></circle><circle class="fl-a" r="3.2"><animateMotion dur="3.2s" repeatCount="indefinite" path="M76,410 C36,444 10,376 72,374"/></circle><circle class="fl-a" r="3.2"><animateMotion dur="3.2s" begin="-1.6s" repeatCount="indefinite" path="M284,410 C324,444 350,376 288,374"/></circle></g>
+</svg>
+</figure>
 </div>
 </section>
 
-<section id="curve">
-<div class="sechead">
-<div><p class="kick">the curve / 01</p><h2>One system, one <em>extra term</em>.</h2></div>
-<p class="kick">interactive</p>
-</div>
-<p class="subhead">Read <var>y</var> as everything one system has produced so far &mdash; theorems proved, experiments closed, code that runs &mdash; and <var>t</var> as how long it has been running. The only question is what its rate of production depends on. Three answers, three terms.</p>
-<div class="eqn">
-<div class="eqrow">
-<p class="eqline">&#7823; <span class="op">=</span> a <span class="op">+</span> <span class="hi">by<sup>2</sup></span> <span class="op">&minus;</span> cy<sup>1.5</sup></p>
-<p class="eqcond"><b>fixed</b> a = 1 &nbsp;&middot;&nbsp; y(0) = 0</p>
-</div>
-<dl class="terms">
-<div><dt>a</dt><dd>baseline output</dd></div>
-<div><dt class="hi">by<sup>2</sup></dt><dd>self-influence</dd></div>
-<div><dt>cy<sup>1.5</sup></dt><dd>verification drag</dd></div>
+<div class="who" id="about">
+<div><p class="label">About</p><h2>We build loops that <em>keep their best</em>.</h2>
+<p class="body">Nonlinearity is an independent AI research lab working on systems that close the loop on their own: search, keep what works, learn from it and search again. We work across training, search and verification, and on where the three meet.</p>
+<p class="body">We think general intelligence is already here. What it still lacks is the loop that makes it compound, and that loop is starting to close: AI now does a growing share of AI research itself. We want it to turn as fast as it can.</p>
+<p class="body">Founded by <a href="https://masterzhou1.github.io/">Yufa Zhou</a>, a CS PhD student at Duke with papers at ICLR, NeurIPS and ICML.</p>
+<div class="more"><button class="btn primary" type="button" data-go="research">See the research map →</button><button class="btn" type="button" data-go="writing">See the writing</button></div></div>
+<dl class="facts">
+<div><dt>contact</dt><dd><span id="mail">hi@nonlinearity.net</span><button class="copy" type="button" id="copyMail">copy</button></dd></div>
+<div><dt>scholar</dt><dd><a href="https://scholar.google.com/citations?user=UeChpkIAAAAJ&amp;hl=en">Google Scholar</a></dd></div>
+<div><dt>elsewhere</dt><dd><a href="https://twitter.com/yufa_zhou">X</a><a href="https://github.com/MasterZhou1">GitHub</a><a href="https://www.linkedin.com/in/yufazhou">LinkedIn</a></dd></div>
 </dl>
 </div>
-<div class="split">
-<div>
-<p class="prose">With <var>b</var> at zero, only <var>a</var> is left: the system makes a fixed amount per unit time and never looks at what it has already made. <var>y</var> is a straight line, forever. Turn <var>b</var> up and the second term starts feeding output back in &mdash; as better tools, better questions, a better search &mdash; and the same equation leaves the frame, then leaves the real line altogether, in finite time.</p>
-<p class="prose">Nothing actually blows up, at least not always. Real loops also carry <var>c</var>: evaluation costs something, verification lags behind generation, compute and data run out. That drag grows more slowly than the feedback does, so it can only win over a middle range of <var>y</var> &mdash; but winning there is enough, because <var>y</var> stalls at a ceiling and never reaches the range where feedback would run away.</p>
-<p class="prose">None of this is a forecast. It is the smallest equation that still contains the argument: whether the feedback term is switched on at all, and whether the drag term can be kept ahead of it.</p>
-</div>
-<div class="viz">
-<div class="vizbar"><span><b>trajectory</b> &nbsp;&middot;&nbsp; y(t)</span><span id="bar">b = 0.000</span></div>
-<canvas id="plot" role="img" aria-describedby="stat" aria-label="Trajectory of y against time for the current values of b and c"></canvas>
-<div class="legendbar">
-<span><i class="dash"></i>no feedback</span>
-<span><i></i>with feedback</span>
-<span id="legLim"><i class="dot"></i>singularity</span>
-</div>
-<div class="vizctrl">
-<div class="ctrl">
-<label for="coefB">self-influence b</label>
-<input id="coefB" type="range" min="0" max="0.5" step="0.005" value="0">
-<b id="bVal">0.000</b>
-</div>
-<div class="ctrl">
-<label for="coefC">verification drag c</label>
-<input id="coefC" type="range" min="0" max="1.5" step="0.01" value="0">
-<b id="cVal">0.00</b>
-</div>
-</div>
-<p class="stat" id="stat"></p>
-</div>
-</div>
-<p class="kicker"><span>So the question is quantitative, not apocalyptic: <em>how strong is the feedback, and how far out can the ceiling be pushed?</em></span></p>
-</section>
-<section id="scope">
-<div class="sechead">
-<div><p class="kick">scope / 02</p><h2>Where the term <em>switches on</em>.</h2></div>
-</div>
-<p class="subhead">A loop only closes if something can hand back a verdict. What that verdict costs is the <var>c</var> term, read across domains instead of across time. The difference between these three is not how fast the work goes but what does the judging: left to right the verdict gets cheaper to run, and narrower in what it can see.</p>
-<div class="three">
-<div><p class="kick">01 / science</p><h3>Experiments that design the next experiment</h3>
-<p>A result stops being an endpoint and becomes an input. The loop from question to evidence can close without waiting for a person to read the log &mdash; but never without waiting for the world, which sets the clock.</p>
-<div class="tmeta"><span>verdict from</span><b>the world</b></div></div>
-<div><p class="kick">02 / models &amp; agents</p><h3>Systems that rewrite their own tooling</h3>
-<p>Models and agents that improve the thing producing them. Each pass changes not only the artifact but the capability that made it. The verdict is cheap to run here and easy to overfit, so it has to be designed as carefully as the loop it scores.</p>
-<div class="tmeta"><span>verdict from</span><b>a benchmark</b></div></div>
-<div><p class="kick">03 / language</p><h3>Anything checkable becomes improvable</h3>
-<p>Proofs, specs, schemas, plans. The limit is not what can be written down but what can be checked. Finding can stay expensive here while checking stays cheap, and a loop can live on that gap alone. It stalls wherever taste is the only judge.</p>
-<div class="tmeta"><span>verdict from</span><b>a checker</b></div></div>
-</div>
 </section>
 
-<section id="about">
-<div class="sechead">
-<div><p class="kick">about / 03</p><h2>What we are <em>building</em>.</h2></div>
+<section class="panel" id="research" role="tabpanel" aria-labelledby="t-research" hidden>
+<div class="page-head"><p class="label">Research</p>
+<h1>Each part of the loop is <em>a research area</em>.</h1>
+<p class="body">Make right answers more likely, afford more attempts, make checks harder to fool and close the loop.</p></div>
+<p class="rot rot-r">a rule of thumb</p><div class="ineq" role="group" aria-label="log one over p is at most about the minimum of log N and log one over epsilon, and the loop feeds back">
+<span class="t" data-term="training">log 1/<i>p</i></span><span class="op">≲</span><span class="op">min(</span><span class="t" data-term="inference">log <i>N</i></span><span class="op">,</span><span class="t" data-term="verification">log 1/<i>ε</i></span><span class="op">)</span><span class="t" data-term="loop" style="margin-left:.6rem">↺</span>
 </div>
-<div class="aboutgrid">
-<p class="prose">Nonlinearity is an independent research effort on self-influencing systems. We build systems that run the loop end to end &mdash; proposing, executing and evaluating their own work &mdash; and the infrastructure that makes those loops cheap enough to leave running. <strong>Our bet is that the self-influence term is already switching on, unevenly, across everything that can be represented as text.</strong></p>
-<aside class="facts">
-<dl>
-<div><dt>status</dt><dd>prototyping</dd></div>
-<div><dt>the hard part</dt><dd>the verdict</dd></div>
-<div><dt>contact</dt><dd><a href="mailto:hi@nonlinearity.net">hi@nonlinearity.net</a></dd></div>
-</dl>
-</aside>
+<figure class="plate rmap"><svg viewBox="150 74 680 340" role="img" aria-label="The research areas placed on the loop. Train, which raises p: pre-training and data, post-training, science of scaling. Search, which raises N: test-time search, agents, world models, systems. Verify, which lowers ε: benchmarks, environments, interpretability. Inside the loop: autoresearch and self-improvement."><path class="ink" d="M360.0,230.0 A110,110 0 1 1 363.3,256.6" marker-end="url(#mI)"/><circle class="dot-i" cx="360.0" cy="230.0" r="5"/><circle class="dot-i" cx="525.0" cy="134.7" r="5"/><circle class="dot-i" cx="525.0" cy="325.3" r="4.5"/><line class="rule" x1="533" y1="129" x2="598" y2="108"/><line class="rule" x1="533" y1="323" x2="598" y2="304"/><line class="rule" x1="352" y1="230" x2="342" y2="230"/><text class="name" x="330" y="196" text-anchor="end">train</text><text class="lab" x="330" y="218" text-anchor="end">raises p</text><text class="lab ink-t" x="330" y="246" text-anchor="end">pre-training &amp; data</text><text class="lab ink-t" x="330" y="268" text-anchor="end">post-training</text><text class="lab ink-t" x="330" y="290" text-anchor="end">science of scaling</text><text class="name" x="610" y="104" text-anchor="start">search</text><text class="lab" x="610" y="126" text-anchor="start">raises N</text><text class="lab ink-t" x="610" y="154" text-anchor="start">test-time search</text><text class="lab ink-t" x="610" y="176" text-anchor="start">agents</text><text class="lab ink-t" x="610" y="198" text-anchor="start">world models</text><text class="lab ink-t" x="610" y="220" text-anchor="start">systems</text><text class="name" x="610" y="300" text-anchor="start">verify</text><text class="lab" x="610" y="322" text-anchor="start">lowers ε</text><text class="lab ink-t" x="610" y="350" text-anchor="start">benchmarks</text><text class="lab ink-t" x="610" y="372" text-anchor="start">environments</text><text class="lab ink-t" x="610" y="394" text-anchor="start">interpretability</text><text class="name" x="470" y="218" text-anchor="middle">the loop</text><text class="lab ink-t" x="470" y="244" text-anchor="middle">autoresearch</text><text class="lab ink-t" x="470" y="266" text-anchor="middle">self-improvement</text></svg></figure>
+<div class="cols" id="cols">
+<div class="col" data-term="training"><div class="col-head"><span class="col-sym">log 1/<i>p</i></span><span class="col-name">Training</span><span class="col-role">how likely an attempt is to be right</span></div>
+<ul><li><span class="a-name">Pre-training &amp; data</span><span class="a-sum">What the learned distribution holds, and what it can compose.</span></li><li><span class="a-name">Post-training</span><span class="a-sum">Turn what passed into weights, so the next task needs fewer attempts.</span></li><li><span class="a-name">Science of scaling</span><span class="a-sum">Why a recipe this simple keeps producing new capability.</span></li></ul></div>
+<div class="col" data-term="inference"><div class="col-head"><span class="col-sym">log <i>N</i></span><span class="col-name">Search</span><span class="col-role">how many attempts we can afford</span></div>
+<ul><li><span class="a-name">Test-time search</span><span class="a-sum">Sample, branch, select: buy more attempts with compute.</span></li><li><span class="a-name">Agents</span><span class="a-sum">Act with tools over long horizons, and put work where it can be tested.</span></li><li><span class="a-name">World models</span><span class="a-sum">Simulate attempts cheaply so more can be afforded, at the price of a check that is easier to fool.</span></li><li><span class="a-name">Systems</span><span class="a-sum">Make each turn of the loop cheap enough to leave running.</span></li></ul></div>
+<div class="col" data-term="verification"><div class="col-head"><span class="col-sym">log 1/<i>ε</i></span><span class="col-name">Verification</span><span class="col-role">how rarely the check is fooled</span></div>
+<ul><li><span class="a-name">Benchmarks</span><span class="a-sum">Decide what counts as passing, and resist being gamed.</span></li><li><span class="a-name">Environments</span><span class="a-sum">Build places where an attempt can actually be run and judged.</span></li><li><span class="a-name">Interpretability</span><span class="a-sum">Check what was learned, not only what was scored.</span></li></ul></div>
+<div class="col" data-term="loop"><div class="col-head"><span class="col-sym"><span class="arr">↺</span></span><span class="col-name">The loop</span><span class="col-role">what works becomes training data</span></div>
+<ul><li><span class="a-name">Autoresearch</span><span class="a-sum">Models that run the research loop end to end.</span></li><li><span class="a-name">Self-improvement</span><span class="a-sum">Where the loop compounds, and where it stalls.</span></li></ul></div>
 </div>
-<p class="kicker"><span>Generation is not the bottleneck. <em>Evaluation is</em> &mdash; and a loop is only worth leaving running where the verdict is both cheap and honest.</span></p>
+
+
+<p class="note">Projects will appear under these areas as they ship.</p>
 </section>
 
-<section class="end">
-<div>
-<h3>Working on the same problem?</h3>
-<p>We want to hear from people who run a lot of experiments and would rather the loop kept moving overnight.</p>
-</div>
-<a href="mailto:hi@nonlinearity.net">Get in touch &#8599;</a>
+<section class="panel" id="writing" role="tabpanel" aria-labelledby="t-writing" hidden>
+<div class="page-head"><p class="label">Writing</p>
+<h1>Essays and notes from <em>Nonlinearity</em>.</h1>
+<p class="body">Essays lay out the view. Notes report what each project found.</p></div>
+<ul class="entries"><li><div class="entry"><span class="e-date">forthcoming</span><span class="e-body"><span class="e-title">The Loop</span><span class="e-sum">People and models run the same cycle: put work out where it can be judged, take back what survived. Why that cycle bends a straight line, why each curve still flattens, and what it takes for the loop to keep turning.</span></span><span class="e-kind">essay</span></div></li></ul>
 </section>
 </main>
 
-<footer><div class="wrap ftr">
-<span>&copy; 2026 Nonlinearity</span>
-<span><a href="mailto:hi@nonlinearity.net">hi@nonlinearity.net</a></span>
-</div></footer>
+<footer><div class="wrap"><span>© 2026 Nonlinearity</span><span>hi@nonlinearity.net</span></div></footer>
+
 <script>
 (function(){
-  var cv=document.getElementById('plot');
-  if(!cv)return;
-  var ctx=cv.getContext('2d');
-  var bIn=document.getElementById('coefB'),cIn=document.getElementById('coefC');
-  var bVal=document.getElementById('bVal'),cVal=document.getElementById('cVal');
-  var bar=document.getElementById('bar'),stat=document.getElementById('stat'),leg=document.getElementById('legLim');
-  var ACC='#5b4be8',MUT='#6a6f7b',MONO='500 10px "IBM Plex Mono", ui-monospace, monospace';
-  var YCAP=9,TMAX=24,DT=0.003;
-  var cur=null,raf=null;
-
-  function rate(b,g,y){ return 1 + b*y*y - g*Math.pow(y,1.5); }
-
-  /* smaller root of 1 + b y^2 - g y^1.5 = 0, or null if the drag never wins */
-  function ceilingOf(b,g){
-    if(g<=0) return null;
-    if(b<=0) return Math.pow(1/g,2/3);
-    var ys=Math.pow(0.75*g/b,2);
-    if(rate(b,g,ys)>=0) return null;
-    var lo=0,hi=ys,mid,i;
-    for(i=0;i<70;i++){ mid=(lo+hi)/2; if(rate(b,g,mid)>0){lo=mid;} else {hi=mid;} }
-    return (lo+hi)/2;
+  var ids=['idea','research','writing'];
+  function show(id,push){
+    var tgt=ids.indexOf(id)<0&&id!=='notes'&&id?document.getElementById(id):null;
+    if(tgt){var pan=tgt.closest('.panel');show(pan?pan.id:'idea',push);tgt.scrollIntoView();return;}
+    if(id==='notes')id='writing';
+    if(ids.indexOf(id)<0)id='idea';
+    ids.forEach(function(k){var p=document.getElementById(k),t=document.getElementById('t-'+k);p.hidden=(k!==id);t.setAttribute('aria-selected',String(k===id));t.tabIndex=k===id?0:-1;});
+    if(push&&location.hash!=='#'+id){try{history.pushState(null,'','#'+id);}catch(e){}}
+    window.scrollTo({top:0,behavior:'auto'});
   }
+  document.querySelectorAll('[data-go]').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();show(el.getAttribute('data-go'),true);});});
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.tabs [role=tab]'));
+  tabs.forEach(function(t,i){t.addEventListener('keydown',function(e){var j=e.key==='ArrowRight'?i+1:e.key==='ArrowLeft'?i-1:null;if(j===null)return;j=(j+tabs.length)%tabs.length;tabs[j].focus();var g=tabs[j].getAttribute('data-go');show(g,false);try{history.replaceState(null,'','#'+g);}catch(_){}});});
+  try{history.scrollRestoration='manual';}catch(e){}
+  show((location.hash||'').slice(1)||'idea',false);
+  function top0(){var h=location.hash.slice(1);if(!h||ids.indexOf(h)>=0||h==='notes'||!document.getElementById(h))window.scrollTo(0,0);}
+  requestAnimationFrame(top0);window.addEventListener('load',function(){top0();setTimeout(top0,0);});
+  window.addEventListener('hashchange',function(){show((location.hash||'').slice(1),false);});
 
-  /* time still left between the top of the frame and the actual blow-up */
-  function tailTime(b,g){
-    if(b<=0) return Infinity;
-    var n=500,u0=1/YCAP,h=u0/n,s=0,i,u;
-    for(i=0;i<n;i++){ u=(i+0.5)*h; s+=h/(u*u*rate(b,g,1/u)); }
-    return s;
+  var terms=document.querySelectorAll('.ineq .t'),cols=document.querySelectorAll('.col');
+  function light(k){terms.forEach(function(t){t.classList.toggle('on',t.getAttribute('data-term')===k);});cols.forEach(function(c){c.classList.toggle('on',c.getAttribute('data-term')===k);});}
+  terms.forEach(function(t){t.addEventListener('mouseenter',function(){light(t.getAttribute('data-term'));});});
+  cols.forEach(function(c){c.addEventListener('mouseenter',function(){light(c.getAttribute('data-term'));});});
+  document.getElementById('cols').addEventListener('mouseleave',function(){light(null);});
+  document.querySelector('.ineq').addEventListener('mouseleave',function(){light(null);});
+
+  var tlf=document.querySelector('.tl-fig');if(tlf){if('IntersectionObserver' in window){var tio=new IntersectionObserver(function(es){if(es[0].isIntersecting){tlf.classList.add('seen');tio.disconnect();}},{threshold:.35});tio.observe(tlf);}else tlf.classList.add('seen');}
+  /* I: draw the discovery figure once it is seen */
+  var dvf=document.querySelector('.dv-fig');
+  if(dvf){if('IntersectionObserver' in window){var dio=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){dvf.classList.add('seen');setTimeout(function(){dvf.classList.add('done');},2400);dio.disconnect();}});},{threshold:.35});dio.observe(dvf);}else dvf.classList.add('seen');}
+
+
+  /* II scrolly steps */
+  var sfig=document.querySelector('.scrolly'),steps=Array.prototype.slice.call(document.querySelectorAll('.steps p[data-step]')),stw=document.querySelector('.steps');
+  var narrow=window.matchMedia('(max-width:900px)'),apT=null,apOn=false;
+  function autoplay(on){if(on===apOn)return;apOn=on;clearTimeout(apT);if(!on)return;var seq=['1','2','3'],d={'1':2600,'2':3400,'3':4600},i=0;
+    (function tick(){sfig.setAttribute('data-step',seq[i]);apT=setTimeout(function(){i=(i+1)%3;tick();},d[seq[i]]);})();}
+  if(sfig&&'IntersectionObserver' in window){new IntersectionObserver(function(es){autoplay(narrow.matches&&es[0].isIntersecting);},{threshold:.35}).observe(sfig);}
+  if(sfig&&'IntersectionObserver' in window){sfig.setAttribute('data-step','1');stw.classList.add('s0');
+    function upd(){if(narrow.matches){stw.classList.add('s0');return;}var mid=innerHeight*.5,k=null;steps.forEach(function(p){if(p.getBoundingClientRect().top<mid)k=p;});
+      if(!k){sfig.setAttribute('data-step','1');stw.classList.add('s0');steps.forEach(function(p){p.classList.remove('on');});return;}
+      sfig.setAttribute('data-step',k.getAttribute('data-step'));stw.classList.remove('s0');steps.forEach(function(p){p.classList.toggle('on',p===k);});}
+    var io=new IntersectionObserver(upd,{rootMargin:'-45% 0px -45% 0px'});steps.forEach(function(p){io.observe(p);});
+    var th=[];for(var i=0;i<=20;i++)th.push(i/20);var to=new IntersectionObserver(upd,{threshold:th});to.observe(stw);to.observe(sfig);var tk=0;addEventListener('scroll',function(){if(!tk){tk=1;requestAnimationFrame(function(){tk=0;upd();});}},{passive:true});upd();}
+  /* III: draw the loop once it is seen, then let the runner go round */
+  if(sfig){var lp=sfig.querySelector('.lp-path');if(lp&&lp.getTotalLength)lp.style.setProperty('--L',lp.getTotalLength());
+    if('IntersectionObserver' in window){var lio=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){sfig.classList.add('seen');setTimeout(function(){sfig.classList.add('drawn');},950);lio.disconnect();}});},{threshold:.12});lio.observe(sfig);}else sfig.classList.add('seen','drawn');}
+
+  if('IntersectionObserver' in window){var pio=new IntersectionObserver(function(es){es.forEach(function(en){var g=en.target;if(g.pauseAnimations){(en.isIntersecting&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))?g.unpauseAnimations():g.pauseAnimations();}});});document.querySelectorAll('svg').forEach(function(g){if(g.querySelector('animateMotion'))pio.observe(g);});}
+  /* replay: a button on each drawn figure, and once more when it comes back into view */
+  function replay(fig){
+    if(fig.getAttribute('data-replay')==='hero'){fig.classList.remove('anim');void fig.offsetWidth;fig.classList.add('anim');return;}
+    fig.classList.add('no-tr');fig.classList.remove('seen','done','drawn');void fig.offsetWidth;fig.classList.remove('no-tr');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){fig.classList.add('seen');
+      if(fig.classList.contains('dv-fig'))setTimeout(function(){fig.classList.add('done');},2400);
+      if(fig.classList.contains('scrolly'))setTimeout(function(){fig.classList.add('drawn');},950);});});
   }
+  document.querySelectorAll('[data-replay]').forEach(function(fig){
+    var b=fig.querySelector('.replay');if(b)b.addEventListener('click',function(e){e.stopPropagation();replay(fig);});
+    if('IntersectionObserver' in window&&fig.getAttribute('data-replay')!=='hero'){var armed=false;
+      new IntersectionObserver(function(es){var en=es[0];if(!en.isIntersecting){if(fig.classList.contains('seen'))armed=true;}else if(armed&&en.intersectionRatio>=.35){armed=false;replay(fig);}},{threshold:[0,.35]}).observe(fig);}
+  });
+  var root=document.documentElement,tb=document.getElementById('themeBtn'),mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+  function sysDark(){return !!(mq&&mq.matches);}
+  function cur(){var t=root.getAttribute('data-theme');return t==='dark'||t==='light'?t:(sysDark()?'dark':'light');}
+  try{var sv=localStorage.getItem('nl-theme');if(sv==='dark'||sv==='light')root.setAttribute('data-theme',sv);}catch(e){}
+  function label(){var c=cur();tb.setAttribute('aria-label',c==='dark'?'Switch to light theme':'Switch to dark theme');tb.title=tb.getAttribute('aria-label');}
+  label();tb.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('nl-theme',n);}catch(e){}label();});
+  if(mq&&mq.addEventListener)mq.addEventListener('change',label);
 
-  /* RK4 */
-  function trace(b,g,ceil){
-    var y=0,t=0,pts=[[0,0]],esc=null,i,k1,k2,k3,k4,ny,fr;
-    var stop=(ceil===null)?Infinity:ceil*(1-1e-4);
-    var n=Math.round(TMAX/DT);
-    for(i=1;i<=n;i++){
-      k1=rate(b,g,y);
-      k2=rate(b,g,Math.max(0,y+DT*k1/2));
-      k3=rate(b,g,Math.max(0,y+DT*k2/2));
-      k4=rate(b,g,Math.max(0,y+DT*k3));
-      ny=y+DT*(k1+2*k2+2*k3+k4)/6;
-      if(!isFinite(ny)||ny>=YCAP){ fr=(YCAP-y)/(ny-y); esc=t+fr*DT; pts.push([esc,YCAP]); break; }
-      y=ny; t+=DT;
-      if(i%8===0) pts.push([t,y]);
-      if(y>=stop){ pts.push([t,y]); pts.push([TMAX,ceil]); break; }
-    }
-    return {pts:pts,esc:esc};
-  }
-
-  function model(b,g){
-    var ceil=ceilingOf(b,g);
-    var showCeil=(ceil!==null&&ceil<=YCAP*0.85);
-    var tr=trace(b,g,showCeil?ceil:null);
-    var tInf=null,tView,t99,i,maxY=0;
-    if(ceil===null&&tr.esc!==null){ tInf=tr.esc+tailTime(b,g); if(!isFinite(tInf)) tInf=null; }
-    if(tInf!==null){ tView=Math.min(16,Math.max(2.6,Math.min(tInf*1.45,tr.esc*1.75))); }
-    else if(showCeil){
-      t99=tr.pts[tr.pts.length-1][0];
-      for(i=0;i<tr.pts.length;i++){ if(tr.pts[i][1]>=0.995*ceil){ t99=tr.pts[i][0]; break; } }
-      tView=Math.min(16,Math.max(2.6,t99*1.4));
-    }
-    else if(tr.esc!==null){ tView=Math.min(16,Math.max(2.6,tr.esc*1.25)); }
-    else { tView=8; }
-    for(i=0;i<tr.pts.length;i++){ if(tr.pts[i][0]<=tView&&tr.pts[i][1]>maxY) maxY=tr.pts[i][1]; }
-    var yView=showCeil?Math.max(2.2,ceil*1.38):Math.max(2.2,Math.min(YCAP*1.06,maxY*1.14));
-    return {b:b,g:g,pts:tr.pts,ceil:ceil,showCeil:showCeil,tInf:tInf,tView:tView,yView:yView};
-  }
-
-  function draw(m,p){
-    var W=cv.clientWidth,H=cv.clientHeight,dpr=window.devicePixelRatio||1;
-    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
-    var L=34,R=16,T=16,B=24,pw=W-L-R,ph=H-T-B,i,j;
-    function X(t){ return L+pw*Math.min(1,t/m.tView); }
-    function Y(y){ return T+ph*(1-Math.min(1.02,y/m.yView)); }
-    ctx.strokeStyle='rgba(21,23,28,.06)'; ctx.lineWidth=1;
-    for(i=1;i<=3;i++){ var gy=Math.round(T+ph*i/4)+0.5; ctx.beginPath(); ctx.moveTo(L,gy); ctx.lineTo(L+pw,gy); ctx.stroke(); }
-    if(m.tInf!==null&&m.tInf<m.tView){
-      var xs=X(m.tInf),gd=ctx.createLinearGradient(xs,0,L+pw,0);
-      gd.addColorStop(0,'rgba(91,75,232,.11)'); gd.addColorStop(1,'rgba(91,75,232,0)');
-      ctx.fillStyle=gd; ctx.fillRect(xs,T,L+pw-xs,ph);
-    }
-    if(m.showCeil){ var yc=Y(m.ceil); ctx.fillStyle='rgba(91,75,232,.05)'; ctx.fillRect(L,T,pw,yc-T); }
-    ctx.strokeStyle='rgba(21,23,28,.16)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(L+.5,T); ctx.lineTo(L+.5,T+ph+.5); ctx.lineTo(L+pw,T+ph+.5); ctx.stroke();
-    ctx.font=MONO; ctx.fillStyle=MUT;
-    ctx.textAlign='right'; ctx.textBaseline='middle';
-    ctx.fillText(m.yView.toFixed(1),L-8,T+5); ctx.fillText('0',L-8,T+ph-4);
-    ctx.textAlign='center'; ctx.textBaseline='top'; ctx.fillText('t',L+pw-2,T+ph+7);
-    var tEdge=Math.min(m.tView,m.yView);
-    ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(21,23,28,.3)'; ctx.lineWidth=1.25;
-    ctx.beginPath(); ctx.moveTo(X(0),Y(0)); ctx.lineTo(X(tEdge),Y(tEdge)); ctx.stroke(); ctx.setLineDash([]);
-    var lim=p*m.tView,path=[];
-    for(j=0;j<m.pts.length;j++){ if(m.pts[j][0]>lim) break; path.push(m.pts[j]); }
-    if(path.length>1){
-      var last=path[path.length-1];
-      ctx.beginPath(); ctx.moveTo(X(path[0][0]),Y(path[0][1]));
-      for(j=1;j<path.length;j++) ctx.lineTo(X(path[j][0]),Y(path[j][1]));
-      ctx.lineTo(X(last[0]),Y(0)); ctx.lineTo(X(path[0][0]),Y(0)); ctx.closePath();
-      var fg=ctx.createLinearGradient(0,T,0,T+ph);
-      fg.addColorStop(0,'rgba(91,75,232,.14)'); fg.addColorStop(1,'rgba(91,75,232,0)');
-      ctx.fillStyle=fg; ctx.fill();
-      ctx.beginPath(); ctx.moveTo(X(path[0][0]),Y(path[0][1]));
-      for(j=1;j<path.length;j++) ctx.lineTo(X(path[j][0]),Y(path[j][1]));
-      ctx.strokeStyle=ACC; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.stroke();
-    }
-    var a=Math.min(1,Math.max(0,(p-0.3)/0.7));
-    ctx.globalAlpha=a; ctx.font=MONO;
-    if(m.tInf!==null&&m.tInf<=m.tView){
-      var xa=X(m.tInf);
-      ctx.setLineDash([2,3]); ctx.strokeStyle='rgba(91,75,232,.6)'; ctx.lineWidth=1.25;
-      ctx.beginPath(); ctx.moveTo(xa,T); ctx.lineTo(xa,T+ph); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle=ACC; ctx.textBaseline='top';
-      if(xa>L+pw-64){ ctx.textAlign='right'; ctx.fillText('t* = '+m.tInf.toFixed(2),xa-6,T+1); }
-      else { ctx.textAlign='left'; ctx.fillText('t* = '+m.tInf.toFixed(2),xa+6,T+1); }
-    }
-    if(m.showCeil){
-      var yl=Y(m.ceil);
-      ctx.setLineDash([2,3]); ctx.strokeStyle='rgba(91,75,232,.6)'; ctx.lineWidth=1.25;
-      ctx.beginPath(); ctx.moveTo(L,yl); ctx.lineTo(L+pw,yl); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle=ACC; ctx.textAlign='right'; ctx.textBaseline='bottom';
-      ctx.fillText('ceiling  y = '+m.ceil.toFixed(2),L+pw-2,yl-5);
-    }
-    ctx.globalAlpha=1;
-  }
-
-  function describe(m){
-    if(m.showCeil) return 'the drag holds: y settles at y = '+m.ceil.toFixed(2)+', no singularity';
-    if(m.ceil!==null) return 'a ceiling exists at y = '+m.ceil.toFixed(1)+', far above the frame';
-    if(m.tInf!==null){
-      if(m.g>0) return 'the drag only buys time: y escapes at t* = '+m.tInf.toFixed(2);
-      return 'y leaves the real line at t* = '+m.tInf.toFixed(2);
-    }
-    if(m.b===0&&m.g===0) return 'no feedback, no drag: y grows exactly like t';
-    return 'the two terms nearly cancel: y crawls, but nothing caps it';
-  }
-
-  function paint(){
-    var b=parseFloat(bIn.value),g=parseFloat(cIn.value);
-    bVal.textContent=b.toFixed(3); cVal.textContent=g.toFixed(2);
-    bar.textContent='b = '+b.toFixed(3)+'  \u00b7  c = '+g.toFixed(2);
-    cur=model(b,g);
-    stat.textContent=describe(cur);
-    if(leg){
-      if(cur.showCeil){ leg.style.visibility='visible'; leg.innerHTML='<i class="dot"></i>ceiling'; }
-      else if(cur.tInf!==null){ leg.style.visibility='visible'; leg.innerHTML='<i class="dot"></i>singularity'; }
-      else { leg.style.visibility='hidden'; }
-    }
-  }
-
-  function animate(){
-    if(raf) cancelAnimationFrame(raf);
-    var t0=performance.now(),D=420;
-    function step(now){
-      var p=Math.min(1,(now-t0)/D),e=1-Math.pow(1-p,3);
-      draw(cur,e);
-      if(p<1){ raf=requestAnimationFrame(step); } else { raf=null; }
-    }
-    raf=requestAnimationFrame(step);
-  }
-  function snap(){ if(raf) cancelAnimationFrame(raf); raf=null; if(cur) draw(cur,1); }
-
-  function onInput(){ paint(); animate(); }
-  function onChange(){ paint(); snap(); }
-  bIn.addEventListener('input',onInput); cIn.addEventListener('input',onInput);
-  bIn.addEventListener('change',onChange); cIn.addEventListener('change',onChange);
-  window.addEventListener('resize',snap);
-  if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(snap); }
-  paint(); snap();
+  var cb=document.getElementById('copyMail');
+  cb.addEventListener('click',function(){var m=document.getElementById('mail');
+    function sel(){var r=document.createRange();r.selectNodeContents(m);var s=getSelection();s.removeAllRanges();s.addRange(r);cb.textContent='selected';}
+    try{navigator.clipboard.writeText(m.textContent).then(function(){cb.textContent='copied';},sel);}catch(e){sel();}
+    clearTimeout(cb._t);cb._t=setTimeout(function(){cb.textContent='copy';},1800);});
 })();
 </script>
 </body>
