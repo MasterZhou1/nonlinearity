@@ -54,12 +54,12 @@
 *{box-sizing:border-box}
 body{margin:0}
 .formula .f,.ineq,.col-sym,.defs dt,.sum,.plain i,.name{font-variant-numeric:lining-nums}
-html{background:var(--bg);scroll-padding-top:80px}
+html{background:var(--bg);scroll-padding-top:80px;font-size:clamp(100%,calc(100% + (100vw - 1600px)/240),125%)}
 body{background:var(--bg);color:var(--ink);font:1.0625rem/1.7 var(--sans);-webkit-font-smoothing:antialiased;padding-inline:var(--gut);overflow-x:clip}
 :root{--gut:clamp(20px,4.5vw,56px)}
 a{color:inherit}
 :focus-visible{outline:1.5px solid var(--accent);outline-offset:3px;border-radius:3px}
-.wrap{max-width:1080px;margin:0 auto}
+.wrap{max-width:67.5rem;margin:0 auto}
 h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;letter-spacing:-.01em;text-wrap:balance}
 h1{font-size:clamp(2.8rem,6vw,5rem);line-height:.98}
 h2{font-size:clamp(2rem,3.4vw,2.75rem);line-height:1.05}
@@ -100,7 +100,7 @@ p{margin:0}
 .hero{position:relative;min-height:clamp(520px,calc(100svh - 65px - clamp(3rem,7vh,5rem)),860px);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:clamp(1.5rem,4vw,4rem);align-items:start;padding-bottom:clamp(1.5rem,4vh,3rem)}
 .hero .key{margin-top:2rem}
 .hero-copy{display:flex;flex-direction:column}
-.hero-copy{position:relative;z-index:2;max-width:600px;grid-column:1;grid-row:1}
+.hero-copy{position:relative;z-index:2;max-width:37.5rem;grid-column:1;grid-row:1}
 .hero h1{margin-top:1.3rem;max-width:15ch}
 @media(min-width:901px) and (max-height:780px){.hero h1{font-size:min(5rem,6vw,10vh);margin-top:1rem}.hero .lead{margin-top:1.1rem}.hero .key{margin-top:1.4rem}}
 .hero .lead{font-size:clamp(1.08rem,1.6vw,1.22rem);color:var(--soft);max-width:30em;margin-top:1.4rem;}
@@ -136,7 +136,7 @@ p{margin:0}
 @media(min-width:761px) and (max-width:1000px){.plate .tl-wide .lab{font-size:16px}.plate .tl-wide .name{font-size:25px}}
 
 /* research map */
-.rmap{margin-top:2.4rem;padding:1.4rem 1.2rem}.rmap svg{display:block;width:100%;max-width:820px;margin:0 auto;height:auto}
+.rmap{margin-top:2.4rem;padding:1.4rem 1.2rem}.rmap svg{display:block;width:100%;max-width:51.25rem;margin:0 auto;height:auto}
 @media(max-width:600px){.rmap{display:none}}
 .dv-doc{stroke-width:1.3}
 
@@ -151,7 +151,7 @@ p{margin:0}
 }
 /* I: discovery figure */
 .dv-fig{display:flex;justify-content:center;align-items:center;padding:1.4rem 1rem}
-.plate .dv{width:100%;max-width:470px;height:auto}
+.plate .dv{width:100%;max-width:29.5rem;height:auto}
 .dv .dv-o{stroke-width:1.3;stroke-opacity:.75}
 @media(max-width:600px){.plate .dv .lab{font-size:16.5px}.plate .dv .name{font-size:26px}}
 @media(prefers-reduced-motion:no-preference){.dv-fig .dv-end2{opacity:0}.dv-fig.seen .dv-end2{opacity:1;transition:opacity .4s ease var(--dl)}}
@@ -173,18 +173,27 @@ p{margin:0}
 }
 
 .plate svg.w3m{display:none}
-@media(min-width:601px){.w3wrap{padding:.8rem 0 .2rem}.w3wrap svg.w3{max-width:520px;margin:0 auto}}
+@media(min-width:601px){.w3wrap{padding:.8rem 0 .2rem}.w3wrap svg.w3{max-width:32.5rem;margin:0 auto}}
 @media(min-width:601px) and (max-width:900px){.w3wrap svg.w3{max-width:440px}}
 @media(max-width:600px){.w3wrap{display:none}.plate svg.w3m{display:block;width:100%;max-width:290px;height:auto;margin:.6rem auto .2rem}.plate .w3m .lab{font-size:12px}.plate .w3m .name{font-size:22px}}
-/* II scrolly: figure stays put while the text steps through */
+/* III stepper: the three paragraphs are the steps, the figure shows the one that is on */
 .scrolly{display:none}
-@media(min-width:901px) and (prefers-reduced-motion:no-preference){
-  .has-scrolly{align-items:start}
+@keyframes fillv{from{height:0}to{height:100%}}
+@media(prefers-reduced-motion:no-preference){
   .has-scrolly .duo-fig{display:none}
-  .has-scrolly .scrolly{display:block;position:sticky;top:max(80px,calc(50vh + 32px - min(29vh,250px) - 19px));margin-top:2.45rem;padding:1.2rem 0}
-  .scrolly .sc-row svg{max-height:min(56vh,480px)}
-  .steps p[data-step]{padding-bottom:5vh;transition:color .4s}
-  .steps p[data-step]:last-child{padding-bottom:20vh}
+  .has-scrolly .scrolly{display:block}
+  .steps p[data-step]{position:relative;padding:.8rem 0 .8rem 1.3rem;border-left:1.5px solid var(--line);cursor:pointer;transition:color .4s}
+  .steps p[data-step]+p[data-step]{margin-top:0}
+  .steps p[data-step]:hover{color:var(--ink)}
+  .steps p[data-step]::before{content:"";position:absolute;left:-1.5px;top:0;width:1.5px;height:0;background:var(--accent)}
+  .steps p[data-step].on::before{height:100%}
+  .steps.playing p[data-step].on::before{animation:fillv var(--dur,5s) linear both}
+  .steps p[data-step]:focus-visible{outline-offset:2px}
+}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){
+  .pair.has-scrolly{align-items:center}
+  .pair.has-scrolly .scrolly{margin-top:0;padding:1.4rem 0}
+  .scrolly .sc-row svg{max-height:min(56vh,30rem)}
 }
 
 @media(prefers-reduced-motion:no-preference){
@@ -200,8 +209,7 @@ p{margin:0}
   .scrolly[data-step="3"] .sp-path{stroke-dashoffset:0}
 }
 @media(max-width:900px) and (prefers-reduced-motion:no-preference){
-  .has-scrolly .duo-fig{display:none}
-  .has-scrolly .scrolly{display:block;margin-top:1.8rem;padding:1rem .6rem}
+  .pair.has-scrolly .scrolly{margin-top:1.8rem;padding:1rem .6rem}
   .scrolly[data-step="1"] .st-loop{transform:translateY(34px)}
 }
 @media(max-width:600px){.plate.scrolly .lab{font-size:17px}.plate.scrolly .name{font-size:26px}.scrolly .st-loopname .name,.scrolly .st-spname .name{font-size:28px}}
@@ -226,7 +234,9 @@ p{margin:0}
 .hero .tm{font-size:22px}
 .anim .climb{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 12s cubic-bezier(.45,0,.25,1) infinite}
 .anim .loopg{opacity:0;animation:pop 12s ease infinite}
-.anim .tag-end{opacity:0;animation:pop 12s ease infinite;animation-delay:6.2s}
+.anim .tag-end{opacity:0;animation:pop 12s ease infinite;animation-delay:5.3s}
+.anim .climb{animation-delay:-.9s}
+.teaser.anim .base-reveal,.teaser.anim .base-t{animation:none}
 @keyframes draw{0%{stroke-dashoffset:1}8%{stroke-dashoffset:1}62%{stroke-dashoffset:0}90%{stroke-dashoffset:0;opacity:1}98%{stroke-dashoffset:0;opacity:0}100%{stroke-dashoffset:1;opacity:0}}
 .anim .base-reveal{transform-box:fill-box;transform-origin:left center;animation:grow 12s cubic-bezier(.45,0,.25,1) infinite}
 .anim .base-t{animation:pop2 12s ease infinite}
@@ -252,9 +262,11 @@ p{margin:0}
 
 
 /* about */
-.who{margin-top:clamp(3.5rem,8vh,5rem);padding-top:clamp(3.5rem,8vh,5rem);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:3rem;align-items:start}
+.who{margin-top:clamp(3.5rem,8vh,5rem);padding-top:clamp(3.5rem,8vh,5rem);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:1.6rem 3rem;align-items:start}
+.who-head{grid-column:1/-1}
 .who h2{margin-top:1rem}
-.who .body{margin-top:1.1rem}
+.who .body+.body{margin-top:1.1rem}
+.who .facts{margin-top:.45rem}
 .who .body a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
 .who .body a:hover{border-bottom-color:var(--accent)}
 .facts{margin:0;border-top:1px solid var(--line)}
@@ -352,7 +364,6 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
 @media(max-width:340px){.plate .dv .lab{font-size:17px}}
 @media(min-width:901px) and (max-width:1100px){.plate.rmap .lab{font-size:12px}}
 @media(min-width:701px) and (max-width:900px){.hero .tm{font-size:31px}}
-@media(min-width:901px) and (prefers-reduced-motion:no-preference){.steps p[data-step]:last-child{padding-bottom:35vh}}
 @media print{
   :root:not(#_p){--bg:#fff;--bg-2:#fff;--bg-3:#f4f4f1;--ink:#16181c;--soft:#474b52;--muted:#686c73;--line:rgba(22,24,28,.12);--line-2:rgba(22,24,28,.25);--accent:#1f4e79;--accent-wash:rgba(31,78,121,.07);--accent-fill:rgba(31,78,121,.13);--header:#fff;color-scheme:light}
   .climb,.dv-try,.dv-right,.dv-false,.sp-path,.lp-path{stroke-dashoffset:0!important;animation:none!important;transition:none!important}
@@ -432,9 +443,9 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
 <figure class="teaser anim" aria-hidden="false" data-replay="hero"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><svg viewBox="0 0 900 760" preserveAspectRatio="xMaxYMid meet" role="img" aria-label="A dashed straight line labeled search alone. Above it, a chain of S-shaped curves: each rises and flattens, and the next starts where the last one ended, never dropping back. Each rise is larger than the one before.">
 <defs><clipPath id="baseClip" clipPathUnits="userSpaceOnUse"><rect class="base-reveal" x="36" y="0" width="830" height="760"/></clipPath></defs><path class="base" clip-path="url(#baseClip)" d="M40,720 L860,560"/>
 <path class="climb" pathLength="1" d="M40.0,716.5 L43.5,716.2 L47.0,715.8 L50.5,715.4 L54.0,715.0 L57.5,714.5 L61.0,714.1 L64.5,713.6 L68.0,713.1 L71.5,712.5 L75.0,712.0 L78.5,711.4 L82.0,710.9 L85.5,710.3 L89.0,709.7 L92.5,709.1 L96.0,708.5 L99.5,707.9 L103.0,707.2 L106.5,706.6 L110.0,705.9 L113.5,705.3 L117.0,704.6 L120.5,703.9 L124.0,703.3 L127.5,702.6 L131.0,701.9 L134.5,701.2 L138.0,700.4 L141.5,699.7 L145.0,698.8 L148.5,698.0 L152.0,697.0 L155.5,695.8 L159.0,694.4 L162.5,692.6 L166.0,690.5 L169.5,688.0 L173.0,685.2 L176.5,682.2 L180.0,679.2 L183.5,676.4 L187.0,673.7 L190.5,671.3 L194.0,669.2 L197.5,667.3 L201.0,665.7 L204.5,664.3 L208.0,663.1 L211.5,662.1 L215.0,661.3 L218.5,660.6 L222.0,660.0 L225.5,659.5 L229.0,659.1 L232.5,658.7 L236.0,658.4 L239.5,658.1 L243.0,657.8 L246.5,657.5 L250.0,657.2 L253.5,656.9 L257.0,656.5 L260.5,656.1 L264.0,655.6 L267.5,655.0 L271.0,654.4 L274.5,653.6 L278.0,652.7 L281.5,651.7 L285.0,650.4 L288.5,648.9 L292.0,647.2 L295.5,645.2 L299.0,642.8 L302.5,640.2 L306.0,637.1 L309.5,633.7 L313.0,630.0 L316.5,625.9 L320.0,621.5 L323.5,616.9 L327.0,612.1 L330.5,607.3 L334.0,602.4 L337.5,597.7 L341.0,593.1 L344.5,588.8 L348.0,584.8 L351.5,581.2 L355.0,577.9 L358.5,574.9 L362.0,572.3 L365.5,570.0 L369.0,568.1 L372.5,566.4 L376.0,564.9 L379.5,563.7 L383.0,562.6 L386.5,561.7 L390.0,560.9 L393.5,560.3 L397.0,559.7 L400.5,559.1 L404.0,558.6 L407.5,558.2 L411.0,557.8 L414.5,557.3 L418.0,556.9 L421.5,556.5 L425.0,556.0 L428.5,555.5 L432.0,554.9 L435.5,554.3 L439.0,553.6 L442.5,552.7 L446.0,551.8 L449.5,550.7 L453.0,549.5 L456.5,548.0 L460.0,546.4 L463.5,544.5 L467.0,542.4 L470.5,539.9 L474.0,537.1 L477.5,534.0 L481.0,530.4 L484.5,526.5 L488.0,522.0 L491.5,517.2 L495.0,511.8 L498.5,506.0 L502.0,499.8 L505.5,493.2 L509.0,486.3 L512.5,479.0 L516.0,471.6 L519.5,464.1 L523.0,456.5 L526.5,449.0 L530.0,441.7 L533.5,434.7 L537.0,428.0 L540.5,421.6 L544.0,415.7 L547.5,410.2 L551.0,405.2 L554.5,400.6 L558.0,396.5 L561.5,392.9 L565.0,389.6 L568.5,386.7 L572.0,384.1 L575.5,381.8 L579.0,379.9 L582.5,378.1 L586.0,376.6 L589.5,375.3 L593.0,374.1 L596.5,373.1 L600.0,372.2 L603.5,371.4 L607.0,370.7 L610.5,370.0 L614.0,369.4 L617.5,368.9 L621.0,368.3 L624.5,367.8 L628.0,367.3 L631.5,366.8 L635.0,366.3 L638.5,365.8 L642.0,365.2 L645.5,364.6 L649.0,364.0 L652.5,363.3 L656.0,362.5 L659.5,361.6 L663.0,360.6 L666.5,359.4 L670.0,358.2 L673.5,356.7 L677.0,355.1 L680.5,353.3 L684.0,351.3 L687.5,349.0 L691.0,346.4 L694.5,343.5 L698.0,340.2 L701.5,336.6 L705.0,332.5 L708.5,328.0 L712.0,323.0 L715.5,317.5 L719.0,311.5 L722.5,304.9 L726.0,297.8 L729.5,290.0 L733.0,281.7 L736.5,272.9 L740.0,263.5 L743.5,253.7 L747.0,243.4 L750.5,232.8 L754.0,222.0 L757.5,210.9 L761.0,199.8 L764.5,188.8 L768.0,177.8 L771.5,167.1 L775.0,156.7 L778.5,146.7 L782.0,137.1 L785.5,128.0 L789.0,119.5 L792.5,111.5 L796.0,104.1 L799.5,97.3 L803.0,91.0 L806.5,85.3 L810.0,80.1 L813.5,75.4 L817.0,71.1 L820.5,67.3 L824.0,63.9 L827.5,60.9 L831.0,58.2 L834.5,55.8 L838.0,53.7 L841.5,51.8 L845.0,50.1 L848.5,48.6 L852.0,47.3 L855.5,46.2 L859.0,45.2"/>
-<g class="loopg" style="animation-delay:2.4s"><circle cx="290" cy="648" r="4"/><path d="M304,639 a13,13 0 1 0 -5,-17"/><path d="M295,621 l5,7 l7,-4"/></g>
-<g class="loopg" style="animation-delay:3.8s"><circle cx="472" cy="539" r="4"/><path d="M486,530 a15,15 0 1 0 -5,-19"/><path d="M477,510 l5,7 l7,-4"/></g>
-<g class="loopg" style="animation-delay:5s"><circle cx="703" cy="335" r="4"/><path d="M717,326 a17,17 0 1 0 -5,-21"/><path d="M708,300 l5,7 l7,-4"/></g>
+<g class="loopg" style="animation-delay:1.5s"><circle cx="290" cy="648" r="4"/><path d="M304,639 a13,13 0 1 0 -5,-17"/><path d="M295,621 l5,7 l7,-4"/></g>
+<g class="loopg" style="animation-delay:2.9s"><circle cx="472" cy="539" r="4"/><path d="M486,530 a15,15 0 1 0 -5,-19"/><path d="M477,510 l5,7 l7,-4"/></g>
+<g class="loopg" style="animation-delay:4.1s"><circle cx="703" cy="335" r="4"/><path d="M717,326 a17,17 0 1 0 -5,-21"/><path d="M708,300 l5,7 l7,-4"/></g>
 <text class="tm base-t" x="860" y="546" text-anchor="end">search alone</text><text class="tm ax" x="40" y="752">effort, log scale →</text>
 <text class="tm ta tag-end" x="860" y="40" text-anchor="end">each plateaus; the next starts higher</text>
 </svg></figure>
@@ -606,8 +617,8 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
 </section>
 
 <div class="who" id="about">
-<div><p class="label">About</p><h2>We build loops that <em>keep their best</em>.</h2>
-<p class="body">Nonlinearity is an independent AI research lab working on systems that close the loop on their own: search, keep what works, learn from it and search again. We work across training, search and verification, and on where the three meet.</p>
+<div class="who-head"><p class="label">About</p><h2>We build loops that <em>keep their best</em>.</h2></div>
+<div class="who-body"><p class="body">Nonlinearity is an independent AI research lab working on systems that close the loop on their own: search, keep what works, learn from it and search again. We work across training, search and verification, and on where the three meet.</p>
 <p class="body">We think general intelligence is already here. What it still lacks is the loop that makes it compound, and that loop is starting to close: AI now does a growing share of AI research itself. We want it to turn as fast as it can.</p>
 <p class="body">Founded by <a href="https://masterzhou1.github.io/">Yufa Zhou</a>, a CS PhD student at Duke with papers at ICLR, NeurIPS and ICML.</p>
 <div class="more"><button class="btn primary" type="button" data-go="research">See the research map →</button><button class="btn" type="button" data-go="writing">See the writing</button></div></div>
@@ -686,18 +697,19 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
   if(dvf){if('IntersectionObserver' in window){var dio=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){dvf.classList.add('seen');setTimeout(function(){dvf.classList.add('done');},2400);dio.disconnect();}});},{threshold:.35});dio.observe(dvf);}else dvf.classList.add('seen');}
 
 
-  /* II scrolly steps */
+  /* III stepper: plays through once when seen; a click picks a step */
   var sfig=document.querySelector('.scrolly'),steps=Array.prototype.slice.call(document.querySelectorAll('.steps p[data-step]')),stw=document.querySelector('.steps');
-  var narrow=window.matchMedia('(max-width:900px)'),apT=null,apOn=false;
-  function autoplay(on){if(on===apOn)return;apOn=on;clearTimeout(apT);if(!on)return;var seq=['1','2','3'],d={'1':2600,'2':3400,'3':4600},i=0;
-    (function tick(){sfig.setAttribute('data-step',seq[i]);apT=setTimeout(function(){i=(i+1)%3;tick();},d[seq[i]]);})();}
-  if(sfig&&'IntersectionObserver' in window){new IntersectionObserver(function(es){autoplay(narrow.matches&&es[0].isIntersecting);},{threshold:.35}).observe(sfig);}
-  if(sfig&&'IntersectionObserver' in window){sfig.setAttribute('data-step','1');stw.classList.add('s0');
-    function upd(){if(narrow.matches){stw.classList.add('s0');return;}var mid=innerHeight*.5,k=null;steps.forEach(function(p){if(p.getBoundingClientRect().top<mid)k=p;});
-      if(!k){sfig.setAttribute('data-step','1');stw.classList.add('s0');steps.forEach(function(p){p.classList.remove('on');});return;}
-      sfig.setAttribute('data-step',k.getAttribute('data-step'));stw.classList.remove('s0');steps.forEach(function(p){p.classList.toggle('on',p===k);});}
-    var io=new IntersectionObserver(upd,{rootMargin:'-45% 0px -45% 0px'});steps.forEach(function(p){io.observe(p);});
-    var th=[];for(var i=0;i<=20;i++)th.push(i/20);var to=new IntersectionObserver(upd,{threshold:th});to.observe(stw);to.observe(sfig);var tk=0;addEventListener('scroll',function(){if(!tk){tk=1;requestAnimationFrame(function(){tk=0;upd();});}},{passive:true});upd();}
+  var moving=!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches),DUR={'1':5500,'2':6500,'3':6500},apT=null;
+  function go(k,play){clearTimeout(apT);sfig.setAttribute('data-step',k);stw.classList.remove('s0','playing');
+    steps.forEach(function(p){var on=p.getAttribute('data-step')===k;p.classList.toggle('on',on);p.setAttribute('aria-pressed',String(on));});
+    if(!play)return;void stw.offsetWidth;stw.style.setProperty('--dur',DUR[k]+'ms');stw.classList.add('playing');
+    apT=setTimeout(function(){if(k==='3')stw.classList.remove('playing');else go(String(+k+1),true);},DUR[k]);}
+  var playSteps=function(){};
+  if(sfig&&moving){sfig.setAttribute('data-step','1');stw.classList.add('s0');playSteps=function(){go('1',true);};
+    steps.forEach(function(p){p.tabIndex=0;p.setAttribute('role','button');p.setAttribute('aria-pressed','false');
+      p.addEventListener('click',function(){go(p.getAttribute('data-step'),false);});
+      p.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go(p.getAttribute('data-step'),false);}});});
+    if('IntersectionObserver' in window){var sio=new IntersectionObserver(function(es){if(es[0].isIntersecting){playSteps();sio.disconnect();}},{threshold:.35});sio.observe(sfig);}else go('3',false);}
   /* III: draw the loop once it is seen, then let the runner go round */
   if(sfig){var lp=sfig.querySelector('.lp-path');if(lp&&lp.getTotalLength)lp.style.setProperty('--L',lp.getTotalLength());
     if('IntersectionObserver' in window){var lio=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){sfig.classList.add('seen');setTimeout(function(){sfig.classList.add('drawn');},950);lio.disconnect();}});},{threshold:.12});lio.observe(sfig);}else sfig.classList.add('seen','drawn');}
@@ -709,7 +721,7 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
     fig.classList.add('no-tr');fig.classList.remove('seen','done','drawn');void fig.offsetWidth;fig.classList.remove('no-tr');
     requestAnimationFrame(function(){requestAnimationFrame(function(){fig.classList.add('seen');
       if(fig.classList.contains('dv-fig'))setTimeout(function(){fig.classList.add('done');},2400);
-      if(fig.classList.contains('scrolly'))setTimeout(function(){fig.classList.add('drawn');},950);});});
+      if(fig.classList.contains('scrolly')){setTimeout(function(){fig.classList.add('drawn');},950);playSteps();}});});
   }
   document.querySelectorAll('[data-replay]').forEach(function(fig){
     var b=fig.querySelector('.replay');if(b)b.addEventListener('click',function(e){e.stopPropagation();replay(fig);});
