@@ -123,6 +123,10 @@ p{margin:0}
 .pair>.plate{margin-top:2.45rem}
 .pair.flip{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .pair.flip .txt{order:2}
+/* III: the heading spans the row, so the figure's top lines up with the first step */
+.sec .pair.has-scrolly{row-gap:1.2rem}
+.pair.has-scrolly>.sec-head{grid-column:1/-1}
+.pair.has-scrolly>.plate{margin-top:0}
 /* I: the record timeline */
 .intro.rec-intro{display:block}
 .rec-txt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3rem;margin-top:1.4rem}
@@ -191,7 +195,6 @@ p{margin:0}
   .steps p[data-step]:focus-visible{outline-offset:2px}
 }
 @media(min-width:901px) and (prefers-reduced-motion:no-preference){
-  .pair.has-scrolly{align-items:center}
   .pair.has-scrolly .scrolly{margin-top:0;padding:1.4rem 0}
   .scrolly .sc-row svg{max-height:min(56vh,30rem)}
 }
@@ -537,8 +540,8 @@ footer .wrap{border-top:1px solid var(--line);padding-top:1.6rem;display:flex;ju
 
 <section class="sec" aria-labelledby="h-III">
 <div class="pair has-scrolly">
-<div class="txt steps"><div class="sec-head"><span class="num">III</span><h2 id="h-III">A loop, then <em>a spiral</em>.</h2></div>
-<p class="body" style="margin-top:1.2rem" data-step="1">Once found, a success becomes part of the record. Working code is copied, a tool is rebuilt, a pipeline just runs. Discovery stays uncertain; what it finds is kept.</p>
+<div class="sec-head"><span class="num">III</span><h2 id="h-III">A loop, then <em>a spiral</em>.</h2></div>
+<div class="txt steps"><p class="body" data-step="1">Once found, a success becomes part of the record. Working code is copied, a tool is rebuilt, a pipeline just runs. Discovery stays uncertain; what it finds is kept.</p>
 <p class="body" data-step="2">A model is probabilistic and can forget. What it writes down does not: text, code and results stay put. So what is kept stays kept. But if nothing else improves, the loop climbs one curve, flattens and stops at its weakest part.</p>
 <p class="body" data-step="3">When each turn also improves training, search and verification, the limits rise, and the loop opens into a spiral: each turn larger than the last.</p></div>
 <figure class="plate scrolly" data-replay="seen"><button class="replay" type="button" aria-label="Replay animation" title="Replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.2 1.6v3.2H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="sc-row"><svg class="sc-loop" viewBox="0 0 330 345" role="img" aria-label="A loop of train, search and verify. Each turn keeps what works, so what is kept stays kept, but if nothing else improves its curve flattens. When every part improves each turn, the loop opens into a spiral and its curve keeps rising.">
